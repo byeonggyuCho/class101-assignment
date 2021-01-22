@@ -13,6 +13,9 @@
       ],
       "types/*": [
         "src/types/*"
+      ],
+      "assets/*": [
+        "src/assets/*"
       ]
     },
     "target": "es5",

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { ProductItemsType } from 'assets/data/productItems';
-import ProductItem from 'components/ProductItem';
+import Card from 'components/Card';
 
 // Remove repeating type
 interface ImageSliderProp {
@@ -11,13 +11,14 @@ interface ImageSliderProp {
 const Wrapper = styled.div`
   position: relative;
   width: 90%;
-  overflow: hidden;
+  overflow-x: hidden;
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.4);
   margin: 0 auto;
 `;
 
-const Slider = styled.div`
+const CardsWrapper = styled.div`
   display: flex;
+  align-items: center;
   width: 100%;
   height: 450px;
   transition: transform 0.6s ease-in-out;
@@ -37,18 +38,18 @@ const Button = styled.img<{ direction: string }>`
 function ImageSlider({ productItems }: ImageSliderProp) {
   return (
     <Wrapper>
-      <Slider>
+      <CardsWrapper>
         {productItems.map(produnctItem => (
-          <ProductItem key={produnctItem.id} />
+          <Card key={produnctItem.id} produnctItem={produnctItem} />
         ))}
-      </Slider>
+      </CardsWrapper>
 
       <Button
-        src="/assets/icons/next.svg"
+        src="/assets/icons/prev.svg"
         direction="prev"
         alt="Previous Button"
       />
-      <Button src="/assets/icons/prev.svg" direction="next" alt="Next Button" />
+      <Button src="/assets/icons/next.svg" direction="next" alt="Next Button" />
     </Wrapper>
   );
 }

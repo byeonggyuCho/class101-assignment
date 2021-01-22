@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@types/node": "^14.14.22",
     "@types/styled-components": "^5.1.7",
     "next": "10.0.5",
     "react": "17.0.1",

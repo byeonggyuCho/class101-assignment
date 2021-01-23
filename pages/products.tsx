@@ -5,12 +5,12 @@ import {
   ProductItemsType,
   ItemType,
 } from 'assets/data/productItems';
-import Pagination from 'components/Pagenation';
+import Layout from 'components/Layout/Layout';
+// import Pagination from 'components/Pagenation';
 import ImageSlider from 'components/ImageSlider';
 
 // Pagination
 // Image Slider
-
 function Products() {
   const sortDescendingByScore = (arr: ProductItemsType): ProductItemsType => {
     return arr.sort((a: ItemType, b: ItemType) => b.score - a.score);
@@ -19,10 +19,10 @@ function Products() {
   const sortedProductItems = sortDescendingByScore(productItems);
 
   return (
-    <div>
+    <Layout>
       {/* <Pagination productItems={sortedProductItems} /> */}
       <ImageSlider productItems={sortedProductItems} />
-    </div>
+    </Layout>
   );
 }
 

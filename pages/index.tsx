@@ -1,19 +1,33 @@
 import styled from 'styled-components';
-import Navigation from 'components/Layout/Navigation';
-import { RoutesType } from 'types/types';
+
+import Layout from 'components/Layout/Layout';
 
 const Wrapper = styled.div`
-  text-align: center;
+  height: calc(100vh - 4rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Title = styled.h1`
+  font-size: 2.3rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+`;
+
+const SubTitle = styled.h2`
+  font-size: 1.5rem;
 `;
 
 function Home() {
-  const routes: RoutesType = ['products', 'cart'];
-
   return (
-    <Wrapper>
-      <h1>Class101 Assignment</h1>
-      <Navigation routes={routes} />
-    </Wrapper>
+    <Layout>
+      <Wrapper>
+        <Title>Class101 Assignment</Title>
+        <SubTitle>By Suyeon Kang</SubTitle>
+      </Wrapper>
+    </Layout>
   );
 }
 

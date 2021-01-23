@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { ProductItemsType } from 'assets/data/productItems';
+import { ProductItemsType, ItemType } from 'assets/data/productItems';
 import Card from 'components/Card';
 
 // Remove repeating type
@@ -39,7 +39,7 @@ function ImageSlider({ productItems }: ImageSliderProp) {
   return (
     <Wrapper>
       <CardsWrapper>
-        {productItems.map(produnctItem => (
+        {productItems.map((produnctItem: ItemType) => (
           <Card key={produnctItem.id} produnctItem={produnctItem} />
         ))}
       </CardsWrapper>

@@ -7,7 +7,7 @@ const Wrapper = styled.div`
   margin: 1rem;
   height: 20rem;
   flex: 227px 0 0;
-  background: orange;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
 `;
 
 const ImageWrapper = styled.div`
@@ -23,12 +23,13 @@ const Img = styled.img`
 const Title = styled.h2`
   font-size: 1rem;
   text-align: center;
-  padding: 0 0.4rem;
+  padding: 0 0.5rem;
 `;
 
 const Price = styled.h3`
   font-size: 1rem;
   text-align: center;
+  margin-top: 2.5rem;
 `;
 
 interface CardProps {

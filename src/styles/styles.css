@@ -5,11 +5,11 @@ body {
   font-family: 'Lato';
 }
 
-li {
-  list-style: none;
-}
-
 li,
 a {
   color: black;
+}
+
+a {
+  text-decoration: none;
 }

@@ -11,14 +11,15 @@ import PurchasedItem from 'components/Cart/PurchasedItem';
 const Wrapper = styled.div`
   width: 70%;
   margin: 0 auto;
-  padding-left: 2rem;
-  padding-right: 6rem;
+  padding: 2rem 6rem 2rem 2rem;
+  margin-top: 3rem;
   box-sizing: border-box;
+  background-color: #f8f8f9;
 `;
 
 function cart() {
-  const [cart, setCart] = useContext(CartContext);
-  const [purchased, setPurchased] = useContext(PurchasedContext);
+  const [cartList, setCartList] = useContext(CartContext);
+  const [purchasedList, setPurchasedList] = useContext(PurchasedContext);
 
   const test = [
     {
@@ -38,14 +39,35 @@ function cart() {
       price: 240000,
       score: 350,
     },
+    {
+      id: 'tpP45lSwqf1X1yEEFqL4',
+      title: '수놓는 발바닥과 함께 하는 꽁냥꽁냥 고양이 자수',
+      coverImage:
+        'https://cdn.class101.net/images/e6b7bde6-b23d-447f-9cdf-3879caf7eb13',
+      price: 90000,
+      score: 120,
+      availableCoupon: false,
+    },
   ];
 
   const handleChange = useCallback(
     (item: ProductItemType): void => {
-      // Toggle
-      setPurchased([...purchased, item]);
+      const isExisting: boolean =
+        purchasedList.filter((el: ProductItemType) => el.id === item.id)
+          .length > 0
+          ? true
+          : false;
+
+      if (!isExisting) {
+        setPurchasedList([...purchasedList, item]);
+      } else {
+        const newPurchased: ProductItemType[] = purchasedList.filter(
+          (el: ProductItemType) => el.id !== item.id
+        );
+        setPurchasedList(newPurchased);
+      }
     },
-    [purchased]
+    [purchasedList]
   );
 
   return (

@@ -4,7 +4,7 @@ import { ProductItemType } from 'types/types';
 import { Image } from 'styles/styles';
 import { formatPrice } from 'utility/utility';
 
-const Item = styled.div`
+const Wrapper = styled.div`
   display: flex;
   align-items: center;
   padding: 1rem 0;
@@ -32,6 +32,11 @@ const Description = styled.h2`
   margin-bottom: 1rem;
 `;
 
+const CouponTitle = styled.h4`
+  font-size: 0.8rem;
+  color: #ff912a;
+`;
+
 const InputWrapper = styled.div`
   margin-left: auto;
 `;
@@ -45,7 +50,7 @@ function CartItem({ item, onChange }: CartItemProp) {
   const { coverImage, title, price, availableCoupon } = item;
 
   return (
-    <Item>
+    <Wrapper>
       <Checkbox type="checkbox" onChange={() => onChange(item)} />
       <ImageWrapper>
         <Image src={coverImage} alt={title} />
@@ -53,7 +58,7 @@ function CartItem({ item, onChange }: CartItemProp) {
       <TextWrapper>
         <Description>{title}</Description>
         <h3>{formatPrice(price)}원</h3>
-        {availableCoupon && <h4>쿠폰 사용가능</h4>}
+        {!availableCoupon && <CouponTitle>* 쿠폰 사용 불가능</CouponTitle>}
       </TextWrapper>
       <InputWrapper>
         <input
@@ -62,10 +67,12 @@ function CartItem({ item, onChange }: CartItemProp) {
           name="count"
           min="1"
           max="100"
-          defaultValue="1"
+          // value={}
+          // onChange={}
+          // defaultValue="1"
         />
       </InputWrapper>
-    </Item>
+    </Wrapper>
   );
 }
 

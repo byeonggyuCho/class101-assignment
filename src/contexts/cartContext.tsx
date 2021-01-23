@@ -6,12 +6,12 @@ export const CartContext = createContext([]);
 export const PurchasedContext = createContext([]);
 
 function CartProvider({ children }) {
-  const [cart, setCart] = useState<ProductItemType[]>([]);
-  const [purchased, setPurchased] = useState<ProductItemType[]>([]);
+  const [cartList, setCartList] = useState<ProductItemType[]>([]);
+  const [purchasedList, setPurchasedList] = useState<ProductItemType[]>([]);
 
   return (
-    <CartContext.Provider value={[cart, setCart]}>
-      <PurchasedContext.Provider value={[purchased, setPurchased]}>
+    <CartContext.Provider value={[cartList, setCartList]}>
+      <PurchasedContext.Provider value={[purchasedList, setPurchasedList]}>
         {children}
       </PurchasedContext.Provider>
     </CartContext.Provider>

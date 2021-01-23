@@ -7,20 +7,50 @@ import { PurchasedContext } from 'contexts/cartContext';
 const Wrapper = styled.div`
   width: 70%;
   margin: 0 auto;
-  background: grey;
+  padding: 2rem;
+  box-sizing: border-box;
+  background-color: #f2f2f2;
+`;
+
+const Title = styled.h2`
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+`;
+
+const SubTitle = styled.p`
+  display: flex;
+  justify-content: space-between;
+
+  &:not(:last-child) {
+    margin-bottom: 0.7rem;
+  }
 `;
 
 function PurchasedItem() {
-  const [purchased, setPurchased] = useContext(PurchasedContext);
+  const [purchased] = useContext(PurchasedContext);
+
+  const handleGetSum = (arr: ProductItemType[]): number => {
+    return arr.reduce(
+      (acc: number, cur: ProductItemType) => (acc += cur.price),
+      0
+    );
+  };
 
   return (
     <Wrapper>
-      {purchased.map(item => (
-        <div key={item.id}>
-          <p key={item.id}>{item.price}</p>
-          <p>쿠폰 사용하기</p>
-        </div>
-      ))}
+      <div>
+        <Title>결제금액</Title>
+        <SubTitle>
+          총 상품 금액<span>{handleGetSum(purchased)}원</span>
+        </SubTitle>
+        <SubTitle>
+          쿠폰 할인 금액<span>원</span>
+        </SubTitle>
+        <SubTitle>
+          최종 가격<span>원</span>
+        </SubTitle>
+      </div>
     </Wrapper>
   );
 }

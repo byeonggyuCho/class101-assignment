@@ -1,27 +1,28 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 
 import { ProductItemsType, ItemType } from 'assets/data/productItems';
 import Card from 'components/ImageSlider/Card';
 
-// Remove repeating type
-interface ImageSliderProp {
-  productItems: ProductItemsType;
-}
-
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
+  display: flex;
+  justify-content: center;
 `;
 
-const CardsWrapper = styled.div`
+const InnerWrapper = styled.div`
   position: relative;
   overflow-x: hidden;
+  width: 1280px;
+`;
+
+const CardsWrapper = styled.div<{ xPosition: number }>`
+  height: 450px;
   display: flex;
   align-items: center;
-  width: 1280px;
-  height: 450px;
-  margin: 0 auto;
   transition: transform 0.6s ease-in-out;
+  transform: ${({ xPosition }) => xPosition && `translateX(${xPosition}px)`};
 `;
 
 const Button = styled.img<{ direction: string }>`
@@ -36,21 +37,57 @@ const Button = styled.img<{ direction: string }>`
   right: ${({ direction }) => direction === 'next' && 2}%;
 `;
 
+// Remove repeating type
+interface ImageSliderProp {
+  productItems: ProductItemsType;
+}
+
 function ImageSlider({ productItems }: ImageSliderProp) {
+  const [count, setCount] = useState(4);
+  const [xPosition, setXPosition] = useState(0);
+  const [width, setWidth] = useState(0);
+
+  const handleClickPrev = () => {
+    if (count === 4) return;
+    setCount(prev => prev - 1);
+    setXPosition(prev => prev + width);
+  };
+
+  const handleClickNext = () => {
+    if (count >= productItems.length - 1) {
+      setCount(4);
+      setXPosition(0);
+    } else {
+      setCount(prev => prev + 1);
+      setXPosition(prev => prev - width);
+    }
+  };
+
   return (
     <Wrapper>
-      <CardsWrapper>
-        {productItems.map((produnctItem: ItemType) => (
-          <Card key={produnctItem.id} produnctItem={produnctItem} />
-        ))}
-      </CardsWrapper>
-
+      <InnerWrapper>
+        <CardsWrapper xPosition={xPosition}>
+          {productItems.map((produnctItem: ItemType) => (
+            <Card
+              key={produnctItem.id}
+              produnctItem={produnctItem}
+              setWidth={setWidth}
+            />
+          ))}
+        </CardsWrapper>
+      </InnerWrapper>
       <Button
         src="/assets/icons/prev.svg"
         direction="prev"
         alt="Previous Button"
+        onClick={handleClickPrev}
       />
-      <Button src="/assets/icons/next.svg" direction="next" alt="Next Button" />
+      <Button
+        src="/assets/icons/next.svg"
+        direction="next"
+        alt="Next Button"
+        onClick={handleClickNext}
+      />
     </Wrapper>
   );
 }

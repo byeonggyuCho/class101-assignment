@@ -20,8 +20,8 @@ const CardsWrapper = styled.div`
   align-items: center;
   width: 1280px;
   height: 450px;
-  transition: transform 0.6s ease-in-out;
   margin: 0 auto;
+  transition: transform 0.6s ease-in-out;
 `;
 
 const Button = styled.img<{ direction: string }>`
@@ -32,8 +32,8 @@ const Button = styled.img<{ direction: string }>`
   cursor: pointer;
   width: 1.2rem;
   height: 1.2rem;
-  left: ${props => props.direction === 'prev' && 2}%;
-  right: ${props => props.direction === 'next' && 2}%;
+  left: ${({ direction }) => direction === 'prev' && 2}%;
+  right: ${({ direction }) => direction === 'next' && 2}%;
 `;
 
 function ImageSlider({ productItems }: ImageSliderProp) {

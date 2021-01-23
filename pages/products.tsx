@@ -28,10 +28,10 @@ function Products() {
 
   return (
     <Layout>
-      {/* <Pagination productItems={sortedProductItems} /> */}
       <Wrapper>
         <ImageSlider productItems={sortedProductItems} />
       </Wrapper>
+      {/* <Pagination productItems={sortedProductItems} /> */}
     </Layout>
   );
 }

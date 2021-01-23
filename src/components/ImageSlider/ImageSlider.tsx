@@ -1,14 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { ProductItemsType, ItemType } from 'assets/data/productItems';
+import Pagination from 'components/ImageSlider/Pagination';
 import Card from 'components/ImageSlider/Card';
 
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const InnerWrapper = styled.div`
@@ -37,7 +39,6 @@ const Button = styled.img<{ direction: string }>`
   right: ${({ direction }) => direction === 'next' && 2}%;
 `;
 
-// Remove repeating type
 interface ImageSliderProp {
   productItems: ProductItemsType;
 }
@@ -47,13 +48,21 @@ function ImageSlider({ productItems }: ImageSliderProp) {
   const [xPosition, setXPosition] = useState(0);
   const [width, setWidth] = useState(0);
 
-  const handleClickPrev = () => {
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentItems, setCurrentItems] = useState<ItemType[]>([]);
+
+  useEffect(() => {
+    handleCurrentItems();
+  }, [currentPage]);
+
+  const handleClickPrev = (): void => {
     if (count === 4) return;
     setCount(prev => prev - 1);
     setXPosition(prev => prev + width);
   };
 
-  const handleClickNext = () => {
+  const handleClickNext = (): void => {
     if (count >= productItems.length - 1) {
       setCount(4);
       setXPosition(0);
@@ -63,11 +72,22 @@ function ImageSlider({ productItems }: ImageSliderProp) {
     }
   };
 
+  const handleCurrentItems = () => {
+    const itemsPerPage: number = 5;
+    const indexOfLastItem: number = currentPage * itemsPerPage;
+    const indexOfFirstItem: number = indexOfLastItem - itemsPerPage;
+    const currentProductsItems: ItemType[] = productItems.slice(
+      indexOfFirstItem,
+      indexOfLastItem
+    );
+    setCurrentItems(currentProductsItems);
+  };
+
   return (
     <Wrapper>
       <InnerWrapper>
         <CardsWrapper xPosition={xPosition}>
-          {productItems.map((produnctItem: ItemType) => (
+          {currentItems.map((produnctItem: ItemType) => (
             <Card
               key={produnctItem.id}
               produnctItem={produnctItem}
@@ -76,17 +96,24 @@ function ImageSlider({ productItems }: ImageSliderProp) {
           ))}
         </CardsWrapper>
       </InnerWrapper>
-      <Button
-        src="/assets/icons/prev.svg"
-        direction="prev"
-        alt="Previous Button"
-        onClick={handleClickPrev}
-      />
-      <Button
-        src="/assets/icons/next.svg"
-        direction="next"
-        alt="Next Button"
-        onClick={handleClickNext}
+      <div>
+        <Button
+          src="/assets/icons/prev.svg"
+          direction="prev"
+          alt="Previous Button"
+          onClick={handleClickPrev}
+        />
+        <Button
+          src="/assets/icons/next.svg"
+          direction="next"
+          alt="Next Button"
+          onClick={handleClickNext}
+        />
+      </div>
+      <Pagination
+        currentPage={currentPage}
+        onClick={setCurrentPage}
+        productItems={productItems}
       />
     </Wrapper>
   );

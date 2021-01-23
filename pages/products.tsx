@@ -7,7 +7,6 @@ import {
   ItemType,
 } from 'assets/data/productItems';
 import Layout from 'components/Layout/Layout';
-// import Pagination from 'components/Pagenation';
 import ImageSlider from 'components/ImageSlider/ImageSlider';
 
 const Wrapper = styled.div`
@@ -17,8 +16,6 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
-// Pagination
-// Image Slider
 function Products() {
   const sortDescendingByScore = (arr: ProductItemsType): ProductItemsType => {
     return arr.sort((a: ItemType, b: ItemType) => b.score - a.score);
@@ -31,7 +28,6 @@ function Products() {
       <Wrapper>
         <ImageSlider productItems={sortedProductItems} />
       </Wrapper>
-      {/* <Pagination productItems={sortedProductItems} /> */}
     </Layout>
   );
 }

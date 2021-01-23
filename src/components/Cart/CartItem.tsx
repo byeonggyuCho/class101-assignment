@@ -1,3 +1,4 @@
+import { ChangeEvent } from 'react';
 import styled from 'styled-components';
 
 import { ProductItemType } from 'types/types';
@@ -43,11 +44,13 @@ const InputWrapper = styled.div`
 
 interface CartItemProp {
   item: ProductItemType;
+  amount: number;
   onChange: (item: ProductItemType) => void;
+  onChangeAmount: (e: ChangeEvent<HTMLInputElement>, id: string) => void;
 }
 
-function CartItem({ item, onChange }: CartItemProp) {
-  const { coverImage, title, price, availableCoupon } = item;
+function CartItem({ item, amount, onChange, onChangeAmount }: CartItemProp) {
+  const { coverImage, title, price, availableCoupon, id } = item;
 
   return (
     <Wrapper>
@@ -63,13 +66,10 @@ function CartItem({ item, onChange }: CartItemProp) {
       <InputWrapper>
         <input
           type="number"
-          id="count"
-          name="count"
           min="1"
           max="100"
-          // value={}
-          // onChange={}
-          // defaultValue="1"
+          value={amount}
+          onChange={e => onChangeAmount(e, id)}
         />
       </InputWrapper>
     </Wrapper>

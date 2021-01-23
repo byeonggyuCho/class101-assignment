@@ -1,10 +1,10 @@
-import { useContext, useCallback } from 'react';
+import { useContext, useCallback, useState } from 'react';
 import Layout from 'components/Layout/Layout';
 import styled from 'styled-components';
 
 import { ProductItemType } from 'types/types';
 import { CartContext, PurchasedContext } from 'contexts/cartContext';
-import { Title } from 'styles/styles';
+import { Title, Notice } from 'styles/styles';
 import CartItem from 'components/Cart/CartItem';
 import PurchasedItem from 'components/Cart/PurchasedItem';
 
@@ -18,53 +18,50 @@ const Wrapper = styled.div`
 `;
 
 function cart() {
-  const [cartList, setCartList] = useContext(CartContext);
+  const [cartList] = useContext(CartContext);
   const [purchasedList, setPurchasedList] = useContext(PurchasedContext);
+  const [amount, setAmount] = useState(1);
 
-  const test = [
-    {
-      id: 'B9vUv0E0ibc0X55kVVLr',
-      title: '포근한 니트로 만드는 나만의 글씨, 봉봉메이드 니트레터링 클래스',
-      coverImage:
-        'https://cdn.class101.net/images/3a25ecd9-d1ab-4d21-8cc1-522ea711e729',
-      price: 560000,
-      score: 200,
-      availableCoupon: true,
-    },
-    {
-      id: 'ZXV8mCcvbpXKm5J5snUq',
-      title: '붓펜으로 그려낸 보통날, 보통의 글씨',
-      coverImage:
-        'https://cdn.class101.net/images/a363a069-5aaf-40cb-822e-a2cab585c37e',
-      price: 240000,
-      score: 350,
-    },
-    {
-      id: 'tpP45lSwqf1X1yEEFqL4',
-      title: '수놓는 발바닥과 함께 하는 꽁냥꽁냥 고양이 자수',
-      coverImage:
-        'https://cdn.class101.net/images/e6b7bde6-b23d-447f-9cdf-3879caf7eb13',
-      price: 90000,
-      score: 120,
-      availableCoupon: false,
-    },
-  ];
+  const isCarListExisting: boolean = cartList.length > 0;
 
   const handleChange = useCallback(
     (item: ProductItemType): void => {
       const isExisting: boolean =
         purchasedList.filter((el: ProductItemType) => el.id === item.id)
-          .length > 0
-          ? true
-          : false;
+          .length > 0;
 
       if (!isExisting) {
-        setPurchasedList([...purchasedList, item]);
+        const newItem = { ...item, amount: amount };
+        setPurchasedList([...purchasedList, newItem]);
       } else {
         const newPurchased: ProductItemType[] = purchasedList.filter(
           (el: ProductItemType) => el.id !== item.id
         );
         setPurchasedList(newPurchased);
+        setAmount(1);
+      }
+    },
+    [amount, purchasedList]
+  );
+
+  const handleChangeAmount = useCallback(
+    (e, id: string): void => {
+      const amount: string = e.target.value;
+      const isExisting: boolean =
+        purchasedList.filter((el: ProductItemType) => el.id === id).length > 0;
+
+      setAmount(+amount);
+
+      if (isExisting) {
+        const newPurchasedList: ProductItemType[] = purchasedList.map(
+          (item: ProductItemType) => {
+            return {
+              ...item,
+              amount: +amount,
+            };
+          }
+        );
+        setPurchasedList(newPurchasedList);
       }
     },
     [purchasedList]
@@ -73,12 +70,24 @@ function cart() {
   return (
     <Layout>
       <Title>Shopping Cart</Title>
-      <Wrapper>
-        {test.map((item: ProductItemType) => (
-          <CartItem key={item.id} item={item} onChange={handleChange} />
-        ))}
-      </Wrapper>
-      <PurchasedItem />
+      {isCarListExisting && (
+        <Wrapper>
+          {cartList.map((item: ProductItemType) => (
+            <CartItem
+              key={item.id}
+              item={item}
+              onChange={handleChange}
+              amount={amount}
+              onChangeAmount={handleChangeAmount}
+            />
+          ))}
+        </Wrapper>
+      )}
+      {isCarListExisting ? (
+        <PurchasedItem />
+      ) : (
+        <Notice>장바구니가 비어있습니다.</Notice>
+      )}
     </Layout>
   );
 }

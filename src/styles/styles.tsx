@@ -13,3 +13,8 @@ export const Image = styled.img`
   width: 100%;
   height: 100%;
 `;
+
+export const Notice = styled.p`
+  text-align: center;
+  margin-top: 5rem;
+`;

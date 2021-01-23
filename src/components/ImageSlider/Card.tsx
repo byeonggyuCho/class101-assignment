@@ -4,6 +4,7 @@ import { ItemType } from 'assets/data/productItems';
 import { formatPrice } from 'utility/utility';
 
 const Wrapper = styled.div`
+  position: relative;
   width: calc(1280px / 5 + 3px);
   height: 20rem;
   flex-shrink: 0;
@@ -14,11 +15,17 @@ const Wrapper = styled.div`
 const ImageWrapper = styled.div`
   width: 100%;
   height: 10rem;
+  overflow: hidden;
 `;
 
 const Img = styled.img`
   width: 100%;
   height: 100%;
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
 const Content = styled.div`
@@ -38,6 +45,14 @@ const Price = styled.h3`
   margin-top: 2.5rem;
 `;
 
+const Icon = styled.img`
+  position: absolute;
+  top: 0.5rem;
+  right: 1.4rem;
+  z-index: 10;
+  cursor: pointer;
+`;
+
 interface CardProps {
   produnctItem: ItemType;
 }
@@ -47,13 +62,14 @@ function Card({ produnctItem }: CardProps) {
 
   return (
     <Wrapper>
+      <Icon src="/assets/icons/cart.svg" alt="Shopping Cart" />
       <ImageWrapper>
         <Img src={coverImage} alt={title} />
-        <Content>
-          <Title>{title}</Title>
-          <Price>{formatPrice(price)}원</Price>
-        </Content>
       </ImageWrapper>
+      <Content>
+        <Title>{title}</Title>
+        <Price>{formatPrice(price)}원</Price>
+      </Content>
     </Wrapper>
   );
 }

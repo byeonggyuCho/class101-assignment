@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import Link from 'next/link';
 
@@ -30,13 +31,17 @@ const List = styled.ul`
   font-size: 1.1rem;
 `;
 
-const Item = styled.li`
+const Item = styled.li<{ isActive: boolean }>`
+  text-decoration: ${props => props.isActive && 'underline'};
+
   &:not(:last-child) {
     margin-right: 1rem;
   }
 `;
 
 function Navbar({ logo, routes }: NavbarType) {
+  const { asPath } = useRouter();
+
   return (
     <Wrapper>
       <Logo>
@@ -46,7 +51,7 @@ function Navbar({ logo, routes }: NavbarType) {
       </Logo>
       <List>
         {routes.map((route: RouteType, i: number) => (
-          <Item key={i}>
+          <Item key={i} isActive={asPath === `/${route.route}`}>
             <Link href={`/${route.route}`}>
               <a>{route.text}</a>
             </Link>

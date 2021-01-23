@@ -12,6 +12,7 @@ export interface ProductItemType {
   price: number;
   score: number;
   availableCoupon?: boolean;
+  isAddedToCart?: boolean;
 }
 
 export type ProductItemsType = ProductItemType[];

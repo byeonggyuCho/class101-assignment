@@ -1,5 +1,8 @@
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 
+import { Image } from 'styles/styles';
+import { CartContext } from 'contexts/cartContext';
 import { ProductItemType } from 'types/types';
 import { formatPrice } from 'utility/utility';
 
@@ -18,9 +21,7 @@ const ImageWrapper = styled.div`
   overflow: hidden;
 `;
 
-const Img = styled.img`
-  width: 100%;
-  height: 100%;
+const Img = styled(Image)`
   transition: transform 0.3s ease-in-out;
 
   &:hover {
@@ -59,10 +60,21 @@ interface CardProps {
 
 function Card({ produnctItem }: CardProps) {
   const { title, coverImage, price } = produnctItem;
+  const [cart, setCart] = useContext(CartContext);
+
+  const handleClick = (item: ProductItemType): void => {
+    if (cart.length >= 3) return;
+    const newItem = { ...item, isAddedToCart: true };
+    setCart([...cart, newItem]);
+  };
 
   return (
     <Wrapper>
-      <Icon src="/assets/icons/cart.svg" alt="Shopping Cart" />
+      <Icon
+        src="/assets/icons/cart.svg"
+        alt="Shopping Cart"
+        onClick={() => handleClick(produnctItem)}
+      />
       <ImageWrapper>
         <Img src={coverImage} alt={title} />
       </ImageWrapper>

@@ -16,6 +16,9 @@
       ],
       "assets/*": [
         "src/assets/*"
+      ],
+      "contexts/*": [
+        "src/contexts/*"
       ]
     },
     "target": "es5",

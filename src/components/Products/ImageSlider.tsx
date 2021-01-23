@@ -2,8 +2,8 @@ import { useState, useMemo } from 'react';
 import styled from 'styled-components';
 
 import { ProductItemsType, ProductItemType } from 'types/types';
-import Pagination from 'components/ImageSlider/Pagination';
-import Card from 'components/ImageSlider/Card';
+import Pagination from 'components/Products/Pagination';
+import Card from 'components/Products/Card';
 
 const Wrapper = styled.div`
   position: relative;
@@ -20,7 +20,7 @@ const InnerWrapper = styled.div`
 `;
 
 const CardsWrapper = styled.div<{ xPosition: number }>`
-  height: 450px;
+  height: 400px;
   display: flex;
   align-items: center;
   transition: transform 0.6s ease-in-out;

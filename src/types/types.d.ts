@@ -4,3 +4,14 @@ export interface RouteType {
 }
 
 export type RoutesType = RouteType[];
+
+export interface ProductItemType {
+  id: string;
+  title: string;
+  coverImage: string;
+  price: number;
+  score: number;
+  availableCoupon?: boolean;
+}
+
+export type ProductItemsType = ProductItemType[];

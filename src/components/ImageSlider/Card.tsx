@@ -1,7 +1,6 @@
-import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
-import { ItemType } from 'assets/data/productItems';
+import { ProductItemType } from 'types/types';
 import { formatPrice } from 'utility/utility';
 
 const Wrapper = styled.div`
@@ -43,7 +42,7 @@ const Price = styled.h3`
   font-size: 1rem;
   text-align: center;
   font-weight: 700;
-  margin-top: 2.5rem;
+  margin-top: 3rem;
 `;
 
 const Icon = styled.img`
@@ -55,23 +54,14 @@ const Icon = styled.img`
 `;
 
 interface CardProps {
-  produnctItem: ItemType;
-  setWidth: (width: number) => void;
+  produnctItem: ProductItemType;
 }
 
-function Card({ produnctItem, setWidth }: CardProps) {
+function Card({ produnctItem }: CardProps) {
   const { title, coverImage, price } = produnctItem;
-  const cardRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (cardRef.current) {
-      const width: number = cardRef.current.clientWidth;
-      setWidth(width);
-    }
-  }, []);
 
   return (
-    <Wrapper ref={cardRef}>
+    <Wrapper>
       <Icon src="/assets/icons/cart.svg" alt="Shopping Cart" />
       <ImageWrapper>
         <Img src={coverImage} alt={title} />

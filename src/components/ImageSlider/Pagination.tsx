@@ -1,7 +1,4 @@
-import React, { useEffect } from 'react';
 import styled from 'styled-components';
-
-import { ProductItemsType } from 'assets/data/productItems';
 
 const List = styled.ul`
   display: flex;
@@ -17,14 +14,19 @@ const Item = styled.li<{ isCurrent: boolean }>`
 `;
 
 interface PagenationProp {
-  currentPage: number;
-  productItems: ProductItemsType;
-  onClick: (id: number) => void;
+  count: number;
+  maxPageNumber: number;
+  setCount: (count: number) => void;
+  setXPosition: (value: number) => void;
 }
 
-const Pagination = ({ currentPage, onClick, productItems }: PagenationProp) => {
-  const pageNumbers = [];
-  const maxPageNumber: number = Math.ceil(productItems.length / 5);
+const Pagination = ({
+  count,
+  maxPageNumber,
+  setCount,
+  setXPosition,
+}: PagenationProp) => {
+  const pageNumbers: number[] = [];
 
   const handlePageNumbers = (): void => {
     for (let i = 1; i <= maxPageNumber; i++) {
@@ -32,11 +34,10 @@ const Pagination = ({ currentPage, onClick, productItems }: PagenationProp) => {
     }
   };
 
-  const handleClickNumber = (
-    e: React.MouseEvent<HTMLLIElement, MouseEvent>
-  ): void => {
-    const target = e.target as HTMLLIElement;
-    onClick(+target.id);
+  const handleClickNumber = (n: number): void => {
+    const width = 1280 * (n - 1);
+    setXPosition(-width);
+    setCount(n);
   };
 
   handlePageNumbers();
@@ -47,8 +48,8 @@ const Pagination = ({ currentPage, onClick, productItems }: PagenationProp) => {
         <Item
           key={n}
           id={n.toString()}
-          isCurrent={currentPage === n}
-          onClick={handleClickNumber}>
+          isCurrent={count === n}
+          onClick={() => handleClickNumber(n)}>
           {n}
         </Item>
       ))}

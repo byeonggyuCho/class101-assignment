@@ -1,13 +1,4 @@
-interface Coupon {
-  type: string;
-  title: string;
-  discountRate?: number;
-  discountAmount?: number;
-}
-
-type Coupons = Coupon[];
-
-export const coupons: Coupons = [
+export const coupons = [
   {
     type: 'rate',
     title: '10% 할인 쿠폰',

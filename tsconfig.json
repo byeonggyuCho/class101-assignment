@@ -40,7 +40,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "src/assets/data/productItems.js", "src/assets/data/coupons.js"  ],
   "exclude": [
     "node_modules"
   ]

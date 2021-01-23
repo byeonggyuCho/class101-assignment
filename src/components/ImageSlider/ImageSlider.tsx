@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import styled from 'styled-components';
 
-import { ProductItemsType, ItemType } from 'assets/data/productItems';
+import { ProductItemsType, ProductItemType } from 'types/types';
 import Pagination from 'components/ImageSlider/Pagination';
 import Card from 'components/ImageSlider/Card';
 
@@ -44,55 +44,36 @@ interface ImageSliderProp {
 }
 
 function ImageSlider({ productItems }: ImageSliderProp) {
-  const [count, setCount] = useState(4);
+  const [count, setCount] = useState(1);
   const [xPosition, setXPosition] = useState(0);
-  const [width, setWidth] = useState(0);
 
-  // Pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const [currentItems, setCurrentItems] = useState<ItemType[]>([]);
-
-  useEffect(() => {
-    handleCurrentItems();
-  }, [currentPage]);
+  const maxPageNumber: number = useMemo(
+    () => Math.ceil(productItems.length / 5),
+    []
+  );
 
   const handleClickPrev = (): void => {
-    if (count === 4) return;
+    if (count === 1) return;
     setCount(prev => prev - 1);
-    setXPosition(prev => prev + width);
+    setXPosition(prev => prev + 1280);
   };
 
   const handleClickNext = (): void => {
-    if (count >= productItems.length - 1) {
-      setCount(4);
+    if (count >= maxPageNumber) {
+      setCount(1);
       setXPosition(0);
     } else {
       setCount(prev => prev + 1);
-      setXPosition(prev => prev - width);
+      setXPosition(prev => prev - 1280);
     }
-  };
-
-  const handleCurrentItems = () => {
-    const itemsPerPage: number = 5;
-    const indexOfLastItem: number = currentPage * itemsPerPage;
-    const indexOfFirstItem: number = indexOfLastItem - itemsPerPage;
-    const currentProductsItems: ItemType[] = productItems.slice(
-      indexOfFirstItem,
-      indexOfLastItem
-    );
-    setCurrentItems(currentProductsItems);
   };
 
   return (
     <Wrapper>
       <InnerWrapper>
         <CardsWrapper xPosition={xPosition}>
-          {currentItems.map((produnctItem: ItemType) => (
-            <Card
-              key={produnctItem.id}
-              produnctItem={produnctItem}
-              setWidth={setWidth}
-            />
+          {productItems.map((produnctItem: ProductItemType) => (
+            <Card key={produnctItem.id} produnctItem={produnctItem} />
           ))}
         </CardsWrapper>
       </InnerWrapper>
@@ -111,9 +92,10 @@ function ImageSlider({ productItems }: ImageSliderProp) {
         />
       </div>
       <Pagination
-        currentPage={currentPage}
-        onClick={setCurrentPage}
-        productItems={productItems}
+        count={count}
+        setCount={setCount}
+        maxPageNumber={maxPageNumber}
+        setXPosition={setXPosition}
       />
     </Wrapper>
   );

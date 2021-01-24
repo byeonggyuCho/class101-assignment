@@ -1,7 +1,5 @@
 import React, { createContext, useMemo, useReducer } from 'react';
 
-import { ProductItemType } from 'types/types';
-import { updateObject } from 'utility/utility';
 import {
   TOGGLE_ISCHECKED,
   UPDATE_AMOUNT,
@@ -10,19 +8,30 @@ import {
   INIT_CART,
   ADD_ITEM_TO_CART,
 } from 'contexts/actions';
+import {
+  ToggleIsCheckedType,
+  UpdateAmountType,
+  InitCartType,
+  AppItemToCartType,
+  AddItemToPurchasingType,
+  RemovePurchasingItemFromCartType,
+  CartTypes,
+  CartStateType,
+} from 'contexts/store.types';
+import { updateObject } from 'utility/utility';
 
 // Context
 export const CartContext = createContext([]);
 export const PurchasingContext = createContext([]);
 
-const initialState = {
+const initialState: CartStateType = {
   cart: [],
   purchasingCart: [],
   amount: 1,
 };
 
 // Dispatch
-const toggleIsChecked = (state, action) => {
+const toggleIsChecked = (state: CartStateType, action: ToggleIsCheckedType) => {
   const { id, isChecked } = action.payload;
   const updatedState = {
     ...state,
@@ -33,7 +42,7 @@ const toggleIsChecked = (state, action) => {
   return updateObject(state, updatedState);
 };
 
-const updateAmount = (state, action) => {
+const updateAmount = (state: CartStateType, action: UpdateAmountType) => {
   // id
   const updatedState = state.purchasingCart.map(item => {
     return {
@@ -44,7 +53,10 @@ const updateAmount = (state, action) => {
   return updateObject(state, updatedState);
 };
 
-const removePurchasingItemFromCart = (state, action) => {
+const removePurchasingItemFromCart = (
+  state: CartStateType,
+  action: RemovePurchasingItemFromCartType
+) => {
   const updatedState = {
     ...state,
     purchasingCart: state.purchasingCart.filter(
@@ -54,7 +66,7 @@ const removePurchasingItemFromCart = (state, action) => {
   return updateObject(state, updatedState);
 };
 
-const initCart = (state, action) => {
+const initCart = (state: CartStateType, action: InitCartType) => {
   const newItem = {
     ...action.payload,
     isAddedToCart: true,
@@ -70,7 +82,7 @@ const initCart = (state, action) => {
   return updateObject(state, updatedState);
 };
 
-const addItemToCart = (state, action) => {
+const addItemToCart = (state: CartStateType, action: AppItemToCartType) => {
   const { id, isChecked } = action.payload;
 
   const updatedState = {
@@ -82,7 +94,10 @@ const addItemToCart = (state, action) => {
   return updateObject(state, updatedState);
 };
 
-const addItemToPurchasing = (state, action) => {
+const addItemToPurchasing = (
+  state: CartStateType,
+  action: AddItemToPurchasingType
+) => {
   const updatedState = {
     ...state,
     purchasingCart: [...state.purchasingCart, action.payload],

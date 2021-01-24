@@ -8,3 +8,13 @@ export const routes: RoutesType = [
 export const formatPrice = (number: number): string => {
   return number.toLocaleString();
 };
+
+export const updateObject = (
+  oldState: object,
+  updatedState: object
+): object => {
+  return {
+    ...oldState,
+    ...updatedState,
+  };
+};

@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useState } from 'react';
 import styled from 'styled-components';
 
 import { ProductItemType } from 'types/types';
@@ -7,6 +7,7 @@ import { formatPrice } from 'utility/utility';
 
 const Wrapper = styled.div`
   display: flex;
+  font-size: 1rem;
   align-items: center;
   padding: 1rem 0;
 `;
@@ -42,35 +43,59 @@ const InputWrapper = styled.div`
   margin-left: auto;
 `;
 
+const Select = styled.select`
+  padding: 0.3rem;
+
+  &:focus {
+    outline: none;
+  }
+`;
+
 interface CartItemProp {
   item: ProductItemType;
   amount: number;
   onChange: (item: ProductItemType) => void;
-  onChangeAmount: (e: ChangeEvent<HTMLInputElement>, id: string) => void;
+  onChangeAmount: (e: ChangeEvent<HTMLSelectElement>, id: string) => void;
+  // onChangeAmount: (e: ChangeEvent<HTMLInputElement>, id: string) => void;
 }
 
-function CartItem({ item, amount, onChange, onChangeAmount }: CartItemProp) {
-  const { coverImage, title, price, availableCoupon, id } = item;
+function CartItem({ item, onChange, onChangeAmount }: CartItemProp) {
+  const { coverImage, title, price, availableCoupon, id, isChecked } = item;
+  const options = [1, 2, 3, 4, 5];
 
   return (
     <Wrapper>
-      <Checkbox type="checkbox" onChange={() => onChange(item)} />
+      <Checkbox
+        type="checkbox"
+        checked={isChecked}
+        onChange={() => onChange(item)}
+      />
       <ImageWrapper>
         <Image src={coverImage} alt={title} />
       </ImageWrapper>
       <TextWrapper>
         <Description>{title}</Description>
         <h3>{formatPrice(price)}원</h3>
-        {!availableCoupon && <CouponTitle>* 쿠폰 사용 불가능</CouponTitle>}
+        {availableCoupon === false && (
+          <CouponTitle>* 쿠폰 사용 불가능</CouponTitle>
+        )}
       </TextWrapper>
       <InputWrapper>
-        <input
+        {/* <input
           type="number"
           min="1"
           max="100"
+          // defaultValue={1}
           value={amount}
           onChange={e => onChangeAmount(e, id)}
-        />
+        /> */}
+        <Select onChange={e => onChangeAmount(e, id)}>
+          {options.map(option => (
+            <option value={option} key={option}>
+              {option}
+            </option>
+          ))}
+        </Select>
       </InputWrapper>
     </Wrapper>
   );

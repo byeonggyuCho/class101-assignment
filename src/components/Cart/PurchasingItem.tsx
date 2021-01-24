@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import styled from 'styled-components';
 
 import { ProductItemType } from 'types/types';
-import { PurchasedContext } from 'contexts/cartContext';
+import { CartContext } from 'contexts/cartContext';
 
 const Wrapper = styled.div`
   width: 70%;
@@ -27,8 +27,9 @@ const SubTitle = styled.p`
   }
 `;
 
-function PurchasedItem() {
-  const [purchased] = useContext(PurchasedContext);
+function PurchasingItem() {
+  const { state } = useContext(CartContext);
+  const { purchasingCart } = state;
 
   const handleGetSum = (arr: ProductItemType[]): number => {
     return arr.reduce(
@@ -42,11 +43,12 @@ function PurchasedItem() {
     <Wrapper>
       <TotalSum>결제금액</TotalSum>
       <SubTitle>
-        총 상품 금액<span>{handleGetSum(purchased)}원</span>
+        총 상품 금액<span>{handleGetSum(purchasingCart)}원</span>
       </SubTitle>
       <SubTitle>
         쿠폰 할인 금액<span>원</span>
       </SubTitle>
+      <SubTitle>쿠폰 사용하기</SubTitle>
       <SubTitle>
         최종 가격<span>원</span>
       </SubTitle>
@@ -54,4 +56,4 @@ function PurchasedItem() {
   );
 }
 
-export default PurchasedItem;
+export default PurchasingItem;

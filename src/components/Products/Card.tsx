@@ -1,17 +1,17 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 
-import { Image } from 'styles/styles';
 import { CartContext } from 'contexts/cartContext';
+import { INIT_CART } from 'contexts/actions';
 import { ProductItemType } from 'types/types';
 import { formatPrice } from 'utility/utility';
+import { Image } from 'styles/styles';
 
 const Wrapper = styled.div`
   position: relative;
-  width: calc(1280px / 5 + 3px);
-  height: 20rem;
+  width: calc(1280px / 5);
   flex-shrink: 0;
-  padding-right: 15px;
+  padding-right: 1rem;
   box-sizing: border-box;
 `;
 
@@ -30,7 +30,7 @@ const Img = styled(Image)`
 `;
 
 const Content = styled.div`
-  padding: 1rem 0.5rem;
+  padding: 2rem 0.5rem 1rem 0.5rem;
 `;
 
 const Title = styled.h2`
@@ -55,17 +55,21 @@ const Icon = styled.img`
 `;
 
 interface CardProps {
-  produnctItem: ProductItemType;
+  productItem: ProductItemType;
 }
 
-function Card({ produnctItem }: CardProps) {
-  const { title, coverImage, price } = produnctItem;
-  const [cart, setCart] = useContext(CartContext);
+function Card({ productItem }: CardProps) {
+  const { state, dispatch } = useContext(CartContext);
+  const { cart } = state;
+  const { title, coverImage, price } = productItem;
+
+  const handleInitCart = item => {
+    dispatch({ type: INIT_CART, payload: item });
+  };
 
   const handleClick = (item: ProductItemType): void => {
     if (cart.length >= 3) return;
-    const newItem = { ...item, isAddedToCart: true };
-    setCart([...cart, newItem]);
+    handleInitCart(item);
   };
 
   return (
@@ -73,7 +77,7 @@ function Card({ produnctItem }: CardProps) {
       <Icon
         src="/assets/icons/cart.svg"
         alt="Shopping Cart"
-        onClick={() => handleClick(produnctItem)}
+        onClick={() => handleClick(productItem)}
       />
       <ImageWrapper>
         <Img src={coverImage} alt={title} />

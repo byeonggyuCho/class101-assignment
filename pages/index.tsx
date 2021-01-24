@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import Layout from 'components/Layout/Layout';
+import { Title } from 'styles/styles';
 
 const Wrapper = styled.div`
   height: calc(100vh - 4rem);
@@ -8,12 +9,6 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-`;
-
-const Title = styled.h1`
-  font-size: 2.3rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
 `;
 
 const SubTitle = styled.h2`

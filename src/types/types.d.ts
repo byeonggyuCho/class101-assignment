@@ -13,6 +13,7 @@ export interface ProductItemType {
   score: number;
   availableCoupon?: boolean;
   isAddedToCart?: boolean;
+  isChecked?: boolean;
   amount?: number;
 }
 

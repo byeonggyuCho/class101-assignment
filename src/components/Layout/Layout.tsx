@@ -10,6 +10,7 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
     font-family: 'Lato';
+    font-size: 62.5%;
   }
 
   li,
@@ -19,6 +20,10 @@ const GlobalStyle = createGlobalStyle`
 
   a {
     text-decoration: none;
+  }
+
+  p,li {
+    font-size: 1rem;
   }
 `;
 

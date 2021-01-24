@@ -24,7 +24,8 @@ const CardsWrapper = styled.div<{ xPosition: number }>`
   display: flex;
   align-items: center;
   transition: transform 0.6s ease-in-out;
-  transform: ${({ xPosition }) => xPosition && `translateX(${xPosition}px)`};
+  transform: ${({ xPosition }) =>
+    xPosition ? `translateX(${xPosition + 8}px)` : `translateX(8px)`};
 `;
 
 const Button = styled.img<{ direction: string }>`
@@ -72,25 +73,23 @@ function ImageSlider({ productItems }: ImageSliderProp) {
     <Wrapper>
       <InnerWrapper>
         <CardsWrapper xPosition={xPosition}>
-          {productItems.map((produnctItem: ProductItemType) => (
-            <Card key={produnctItem.id} produnctItem={produnctItem} />
+          {productItems.map((productItem: ProductItemType) => (
+            <Card key={productItem.id} productItem={productItem} />
           ))}
         </CardsWrapper>
       </InnerWrapper>
-      <div>
-        <Button
-          src="/assets/icons/prev.svg"
-          direction="prev"
-          alt="Previous Button"
-          onClick={handleClickPrev}
-        />
-        <Button
-          src="/assets/icons/next.svg"
-          direction="next"
-          alt="Next Button"
-          onClick={handleClickNext}
-        />
-      </div>
+      <Button
+        src="/assets/icons/prev.svg"
+        direction="prev"
+        alt="Previous Button"
+        onClick={handleClickPrev}
+      />
+      <Button
+        src="/assets/icons/next.svg"
+        direction="next"
+        alt="Next Button"
+        onClick={handleClickNext}
+      />
       <Pagination
         count={count}
         setCount={setCount}

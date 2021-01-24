@@ -20,7 +20,6 @@ const Wrapper = styled.nav`
 `;
 
 const Logo = styled.div`
-  font-size: 1.1rem;
   font-weight: 700;
 `;
 
@@ -28,7 +27,6 @@ const List = styled.ul`
   display: flex;
   margin: 0;
   padding: 0;
-  font-size: 1.1rem;
 `;
 
 const Item = styled.li<{ isActive: boolean }>`

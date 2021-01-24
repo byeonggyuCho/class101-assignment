@@ -18,3 +18,10 @@ export interface ProductItemType {
 }
 
 export type ProductItemsType = ProductItemType[];
+
+export interface CouponType {
+  type: string;
+  title: string;
+  discountRate?: number;
+  discountAmount?: number;
+}

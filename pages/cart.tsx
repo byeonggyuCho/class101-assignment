@@ -2,12 +2,13 @@ import { useContext, ChangeEvent } from 'react';
 import Layout from 'components/Layout/Layout';
 import styled from 'styled-components';
 
+import { coupons } from 'assets/data/coupons';
 import { CartActionType } from 'reducer/actions';
 import { CartContext } from 'reducer/context';
 import { ProductItemType } from 'types/types';
 import { Title, Notice } from 'styles/styles';
 import CartItem from 'components/Cart/CartItem';
-import PurchasedItem from 'components/Cart/PurchasingItem';
+import PurchasingItem from 'components/Cart/PurchasingItem';
 
 const Wrapper = styled.div`
   width: 70%;
@@ -79,7 +80,7 @@ function cart() {
         </Wrapper>
       )}
       {isCarListExisting ? (
-        <PurchasedItem />
+        <PurchasingItem coupons={coupons} />
       ) : (
         <Notice>장바구니가 비어있습니다.</Notice>
       )}

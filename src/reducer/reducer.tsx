@@ -67,6 +67,7 @@ const addItemToCart = (state, action) => {
   const newItem = {
     ...action.payload,
     isChecked: false,
+    isAddedToCart: true,
     amount: 1,
   };
   const updatedState = {

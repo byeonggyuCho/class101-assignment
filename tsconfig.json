@@ -17,8 +17,8 @@
       "assets/*": [
         "src/assets/*"
       ],
-      "contexts/*": [
-        "src/contexts/*"
+      "reducer/*": [
+        "src/reducer/*"
       ]
     },
     "target": "es5",
@@ -43,7 +43,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "src/assets/data/productItems.js", "src/assets/data/coupons.js"  ],
+, "src/assets/data/productItems.js", "src/assets/data/coupons.js", "src/contexts/cartContext.js", "src/reducer/actions.js", "src/reducer/context.js"  ],
   "exclude": [
     "node_modules"
   ]

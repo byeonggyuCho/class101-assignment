@@ -1,6 +1,5 @@
 import 'styles/reset.css';
-
-import CartProvider from 'contexts/cartContext';
+import CartProvider from 'reducer/context';
 
 function MyApp({ Component, pageProps }) {
   return (

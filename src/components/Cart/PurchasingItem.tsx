@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import styled from 'styled-components';
 
 import { ProductItemType } from 'types/types';
-import { CartContext } from 'contexts/cartContext';
+import { CartContext } from 'reducer/context';
 
 const Wrapper = styled.div`
   width: 70%;
@@ -32,11 +32,7 @@ function PurchasingItem() {
   const { purchasingCart } = state;
 
   const handleGetSum = (arr: ProductItemType[]): number => {
-    return arr.reduce(
-      (acc: number, cur: ProductItemType) =>
-        (acc = acc + cur.price * cur.amount),
-      0
-    );
+    return arr.reduce((acc, cur) => (acc += cur.price * cur.amount), 0);
   };
 
   return (

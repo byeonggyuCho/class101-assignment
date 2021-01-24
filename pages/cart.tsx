@@ -1,13 +1,9 @@
-import { useContext, useCallback } from 'react';
+import { useContext, ChangeEvent } from 'react';
 import Layout from 'components/Layout/Layout';
 import styled from 'styled-components';
 
-import {
-  TOGGLE_ISCHECKED,
-  ADD_ITEM_TO_PURCHASING,
-  REMOVE_PURCHASING_ITEM_FROM_CART,
-} from 'contexts/actions';
-import { CartContext } from 'contexts/cartContext';
+import { CartActionType } from 'reducer/actions';
+import { CartContext } from 'reducer/context';
 import { ProductItemType } from 'types/types';
 import { Title, Notice } from 'styles/styles';
 import CartItem from 'components/Cart/CartItem';
@@ -22,92 +18,50 @@ const Wrapper = styled.div`
   background-color: #f8f8f9;
 `;
 
-/*
-Click a cart icon -> Add an item to cartList
-Render cartItem based on cartList
-Add cartList to PurchasedList when click cart icon
-Display total sum
-
-*/
-
-// Change name of purchasedList
-
 function cart() {
   const { state, dispatch } = useContext(CartContext);
-  const { cart, purchasingCart, amount } = state;
+  const { cart } = state;
 
   const isCarListExisting: boolean = cart.length > 0;
 
-  const handleChange = item => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    item: ProductItemType
+  ): void => {
     const { id } = item;
-    const isPurchasedExisting: boolean = purchasingCart.length > 0;
-    const isInitialList = cart.length === purchasingCart.length;
+    const { checked } = e.target;
 
-    if (isCarListExisting && isPurchasedExisting && !isInitialList) {
-      handleToggleIsChekced(item);
-
-      // Add an item to purchasingList if there not exsting
-      // Remove an item from purchasingList if there exsting
-      const isItemExistInPurchased =
-        purchasingCart.map(item => item.id === id).length > 1;
-
-      const isItemExistInCartList = cart.map(item => item.id === id).length > 1;
-
-      console.log(isItemExistInPurchased);
-
-      if (isItemExistInPurchased) {
-        console.log('Remove');
-        handleRemovePurchasedItemFromCart(id);
-      } else {
-        console.log('Add');
-        handleAddItemToPurchasing(item);
-      }
-    } else if (isInitialList) {
-      handleRemovePurchasedItemFromCart(id);
-      handleToggleIsChekced(item);
-    } else if (isCarListExisting && !isPurchasedExisting) {
-      handleToggleIsChekced(item);
+    if (checked) {
       handleAddItemToPurchasing(item);
+      handleToggleIsChekced(item);
+    } else {
+      handleRemoveItemFromPurchasingCart(id);
+      handleToggleIsChekced(item);
     }
-
-    // If amount is changed onChange, update item's amount of cart and purchased
   };
 
-  const handleToggleIsChekced = item => {
-    dispatch({ type: TOGGLE_ISCHECKED, payload: item });
+  const handleToggleIsChekced = (item: ProductItemType): void => {
+    dispatch({ type: CartActionType.TOGGLE_ISCHECKED, payload: item });
   };
 
-  const handleRemovePurchasedItemFromCart = id => {
-    dispatch({ type: REMOVE_PURCHASING_ITEM_FROM_CART, payload: id });
+  const handleRemoveItemFromPurchasingCart = (id: string): void => {
+    dispatch({
+      type: CartActionType.REMOVE_ITEM_FROM_PURCHASING_CART,
+      payload: id,
+    });
   };
 
-  const handleAddItemToPurchasing = item => {
-    dispatch({ type: ADD_ITEM_TO_PURCHASING, payload: item });
+  const handleAddItemToPurchasing = (item: ProductItemType): void => {
+    dispatch({ type: CartActionType.ADD_ITEM_TO_PURCHASING, payload: item });
   };
 
-  const handleChangeAmount = () => console.log('TEST');
-  // const handleChangeAmount = useCallback(
-  //   (e, id: string): void => {
-  //     const amount: string = e.target.value;
-  //     const isExisting: boolean =
-  //       purchasingList.filter((el: ProductItemType) => el.id === id).length > 0;
-
-  //     setAmount(+amount);
-
-  //     if (isExisting) {
-  //       const newPurchasedList: ProductItemType[] = purchasingList.map(
-  //         (item: ProductItemType) => {
-  //           return {
-  //             ...item,
-  //             amount: +amount,
-  //           };
-  //         }
-  //       );
-  //       setPurchasingList(newPurchasedList);
-  //     }
-  //   },
-  //   [purchasingList]
-  // );
+  const handleChangeAmount = (
+    e: ChangeEvent<HTMLSelectElement>,
+    id: string
+  ): void => {
+    const { value } = e.target;
+    dispatch({ type: CartActionType.UPDATE_AMOUNT, id: id, amount: value });
+  };
 
   return (
     <Layout>
@@ -119,7 +73,6 @@ function cart() {
               key={item.id}
               item={item}
               onChange={handleChange}
-              amount={amount}
               onChangeAmount={handleChangeAmount}
             />
           ))}

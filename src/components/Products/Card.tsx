@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 
-import { CartContext } from 'contexts/cartContext';
-import { INIT_CART } from 'contexts/actions';
+import { CartContext } from 'reducer/context';
+import { CartActionType } from 'reducer/actions';
 import { ProductItemType } from 'types/types';
 import { formatPrice } from 'utility/utility';
 import { Image } from 'styles/styles';
@@ -59,17 +59,17 @@ interface CardProps {
 }
 
 function Card({ productItem }: CardProps) {
+  const { title, coverImage, price } = productItem;
   const { state, dispatch } = useContext(CartContext);
   const { cart } = state;
-  const { title, coverImage, price } = productItem;
 
-  const handleInitCart = item => {
-    dispatch({ type: INIT_CART, payload: item });
+  const handleAddItemToCart = (item: ProductItemType): void => {
+    dispatch({ type: CartActionType.ADD_ITEM_TO_CART, payload: item });
   };
 
   const handleClick = (item: ProductItemType): void => {
     if (cart.length >= 3) return;
-    handleInitCart(item);
+    handleAddItemToCart(item);
   };
 
   return (

@@ -5,7 +5,7 @@ export interface RouteType {
 
 export type RoutesType = RouteType[];
 
-export interface ProductItemType {
+export interface ProductType {
   id: string;
   title: string;
   coverImage: string;
@@ -17,7 +17,7 @@ export interface ProductItemType {
   amount?: number;
 }
 
-export type ProductItemsType = ProductItemType[];
+// export type ProductItemsType = ProductItemType[]; // Remove
 
 export interface CouponType {
   type: string;

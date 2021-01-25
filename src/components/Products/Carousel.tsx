@@ -1,9 +1,9 @@
 import { useState, useMemo } from 'react';
 import styled from 'styled-components';
 
-import { ProductItemsType, ProductItemType } from 'types/types';
+import { ProductType } from 'types/types';
 import Pagination from 'components/Products/Pagination';
-import Card from 'components/Products/Card';
+import CarouselItem from 'components/Products/CarouselItem';
 
 const Wrapper = styled.div`
   position: relative;
@@ -19,7 +19,7 @@ const InnerWrapper = styled.div`
   width: 1280px;
 `;
 
-const CardsWrapper = styled.div<{ xPosition: number }>`
+const ItemsWrapper = styled.div<{ xPosition: number }>`
   height: 400px;
   display: flex;
   align-items: center;
@@ -40,18 +40,17 @@ const Button = styled.img<{ direction: string }>`
   right: ${({ direction }) => direction === 'next' && 2}%;
 `;
 
-interface ImageSliderProp {
-  productItems: ProductItemsType;
+interface CarouselProps {
+  products: ProductType[];
 }
 
-function ImageSlider({ productItems }: ImageSliderProp) {
+function Carousel({ products }: CarouselProps) {
   const [count, setCount] = useState(1);
   const [xPosition, setXPosition] = useState(0);
 
-  const maxPageNumber: number = useMemo(
-    () => Math.ceil(productItems.length / 5),
-    []
-  );
+  const maxPageNumber: number = useMemo(() => Math.ceil(products.length / 5), [
+    products,
+  ]);
 
   const handleClickPrev = (): void => {
     if (count === 1) return;
@@ -72,11 +71,11 @@ function ImageSlider({ productItems }: ImageSliderProp) {
   return (
     <Wrapper>
       <InnerWrapper>
-        <CardsWrapper xPosition={xPosition}>
-          {productItems.map((productItem: ProductItemType) => (
-            <Card key={productItem.id} productItem={productItem} />
+        <ItemsWrapper xPosition={xPosition}>
+          {products.map((product: ProductType) => (
+            <CarouselItem key={product.id} product={product} />
           ))}
-        </CardsWrapper>
+        </ItemsWrapper>
       </InnerWrapper>
       <Button
         src="/assets/icons/prev.svg"
@@ -100,4 +99,4 @@ function ImageSlider({ productItems }: ImageSliderProp) {
   );
 }
 
-export default ImageSlider;
+export default Carousel;

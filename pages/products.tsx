@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
-import { ProductItemType, ProductItemsType } from 'types/types';
+import { ProductType } from 'types/types';
 import { Title } from 'styles/styles';
 import { productItems } from 'assets/data/productItems';
 import Layout from 'components/Layout/Layout';
-import ImageSlider from 'components/Products/ImageSlider';
+import Carousel from 'components/Products/Carousel';
 
 const Wrapper = styled.div`
   height: calc(100vh - 4rem);
@@ -16,19 +16,20 @@ const Wrapper = styled.div`
 `;
 
 function Products() {
-  const sortDescendingByScore = (arr: ProductItemsType): ProductItemsType => {
-    return arr.sort(
-      (a: ProductItemType, b: ProductItemType) => b.score - a.score
-    );
+  const sortDescendingByScore = (arr: ProductType[]): ProductType[] => {
+    return arr.sort((a: ProductType, b: ProductType) => b.score - a.score);
   };
 
-  const sortedProductItems = sortDescendingByScore(productItems);
+  const sortedProducts: ProductType[] = useMemo(
+    () => sortDescendingByScore(productItems),
+    [productItems]
+  );
 
   return (
     <Layout>
       <Wrapper>
         <Title>Products</Title>
-        <ImageSlider productItems={sortedProductItems} />
+        <Carousel products={sortedProducts} />
       </Wrapper>
     </Layout>
   );

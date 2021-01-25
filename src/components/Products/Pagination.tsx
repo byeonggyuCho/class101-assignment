@@ -28,19 +28,19 @@ const Pagination = ({
 }: PagenationProp) => {
   const pageNumbers: number[] = [];
 
-  const handlePageNumbers = (): void => {
+  const addPageNumber = (): void => {
     for (let i = 1; i <= maxPageNumber; i++) {
       pageNumbers.push(i);
     }
   };
 
-  const handleClickNumber = (n: number): void => {
-    const width = 1280 * (n - 1);
+  const handleClick = (n: number): void => {
+    const width: number = 1280 * (n - 1);
     setXPosition(-width);
     setCount(n);
   };
 
-  handlePageNumbers();
+  addPageNumber();
 
   return (
     <List>
@@ -49,7 +49,7 @@ const Pagination = ({
           key={n}
           id={n.toString()}
           isCurrent={count === n}
-          onClick={() => handleClickNumber(n)}>
+          onClick={() => handleClick(n)}>
           {n}
         </Item>
       ))}

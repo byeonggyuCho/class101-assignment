@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { CartContext } from 'reducer/context';
 import { CartActionType } from 'reducer/actions';
-import { ProductItemType } from 'types/types';
+import { ProductType } from 'types/types';
 import { formatPrice } from 'utility/utility';
 import { Image } from 'styles/styles';
 
@@ -54,20 +54,20 @@ const Icon = styled.img`
   cursor: pointer;
 `;
 
-interface CardProps {
-  productItem: ProductItemType;
+interface CarouselItemProps {
+  product: ProductType;
 }
 
-function Card({ productItem }: CardProps) {
-  const { title, coverImage, price } = productItem;
+function CarouselItem({ product }: CarouselItemProps) {
+  const { title, coverImage, price } = product;
   const { state, dispatch } = useContext(CartContext);
   const { cart } = state;
 
-  const handleAddItemToCart = (item: ProductItemType): void => {
+  const handleAddItemToCart = (item: ProductType): void => {
     dispatch({ type: CartActionType.ADD_ITEM_TO_CART, payload: item });
   };
 
-  const handleClick = (item: ProductItemType): void => {
+  const handleClick = (item: ProductType): void => {
     if (cart.length >= 3) return;
     handleAddItemToCart(item);
   };
@@ -77,7 +77,7 @@ function Card({ productItem }: CardProps) {
       <Icon
         src="/assets/icons/cart.svg"
         alt="Shopping Cart"
-        onClick={() => handleClick(productItem)}
+        onClick={() => handleClick(product)}
       />
       <ImageWrapper>
         <Img src={coverImage} alt={title} />
@@ -90,4 +90,4 @@ function Card({ productItem }: CardProps) {
   );
 }
 
-export default Card;
+export default React.memo(CarouselItem);

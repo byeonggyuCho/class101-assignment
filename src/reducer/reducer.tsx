@@ -1,12 +1,12 @@
-import { CartActionType } from 'reducer/actions';
+import { CartActionType, CartStateType, ActionType } from 'reducer/actions';
 import { updateObject } from 'utility/utility';
 
-export const INITIAL_STATE = {
+export const INITIAL_STATE: CartStateType = {
   cart: [],
-  purchasingCart: [],
+  checkout: [],
 };
 
-const toggleIsChecked = (state, action) => {
+const toggleIsChecked = (state: CartStateType, action: ActionType) => {
   const { id, isChecked } = action.payload;
   const updatedState = {
     ...state,
@@ -17,7 +17,7 @@ const toggleIsChecked = (state, action) => {
   return updateObject(state, updatedState);
 };
 
-const initAmount = (state, action) => {
+const initAmount = (state: CartStateType, action: ActionType) => {
   const updatedCart = state.cart.map(item =>
     item.id === action.id ? { ...item, amount: 1 } : item
   );
@@ -28,18 +28,18 @@ const initAmount = (state, action) => {
   return updateObject(state, updatedState);
 };
 
-const updateAmount = (state, action) => {
+const updateAmount = (state: CartStateType, action: ActionType) => {
   let updatedState;
-  const isExistingOnPurchasingCart =
-    state.purchasingCart.map(item => item.id === action.id).length > 0;
+  const isExistingOnCheckout =
+    state.checkout.map(item => item.id === action.id).length > 0;
 
-  if (isExistingOnPurchasingCart) {
-    const updatedPurchasingCart = state.purchasingCart.map(item =>
+  if (isExistingOnCheckout) {
+    const updatedCheckout = state.checkout.map(item =>
       item.id === action.id ? { ...item, amount: +(+action.amount) } : item
     );
     updatedState = {
       ...state,
-      purchasingCart: updatedPurchasingCart,
+      checkout: updatedCheckout,
     };
   } else {
     const updatedCart = state.cart.map(item =>
@@ -53,17 +53,15 @@ const updateAmount = (state, action) => {
   return updateObject(state, updatedState);
 };
 
-const removeItemFromPurchasingCart = (state, action) => {
+const removeItemFromCheckout = (state: CartStateType, action: ActionType) => {
   const updatedState = {
     ...state,
-    purchasingCart: state.purchasingCart.filter(
-      item => item.id !== action.payload
-    ),
+    checkout: state.checkout.filter(item => item.id !== action.payload),
   };
   return updateObject(state, updatedState);
 };
 
-const addItemToCart = (state, action) => {
+const addItemToCart = (state: CartStateType, action: ActionType) => {
   const newItem = {
     ...action.payload,
     isChecked: false,
@@ -78,16 +76,27 @@ const addItemToCart = (state, action) => {
   return updateObject(state, updatedState);
 };
 
-const addItemToPurchasing = (state, action) => {
+const removeItemFromCart = (state: CartStateType, action: ActionType) => {
   const updatedState = {
     ...state,
-    purchasingCart: [...state.purchasingCart, action.payload],
+    cart: state.cart.filter(item => item.id !== action.payload),
+  };
+  return updateObject(state, updatedState);
+};
+
+const addItemToCheckout = (state: CartStateType, action: ActionType) => {
+  const updatedState = {
+    ...state,
+    checkout: [...state.checkout, action.payload],
   };
   return updateObject(state, updatedState);
 };
 
 // REDUCER
-export const reducer = (state = INITIAL_STATE, action) => {
+export const reducer = (
+  state: CartStateType = INITIAL_STATE,
+  action: ActionType
+) => {
   switch (action.type) {
     case CartActionType.TOGGLE_ISCHECKED:
       return toggleIsChecked(state, action);
@@ -95,12 +104,14 @@ export const reducer = (state = INITIAL_STATE, action) => {
       return updateAmount(state, action);
     case CartActionType.INIT_AMOUNT:
       return initAmount(state, action);
-    case CartActionType.REMOVE_ITEM_FROM_PURCHASING_CART:
-      return removeItemFromPurchasingCart(state, action);
+    case CartActionType.REMOVE_ITEM_FROM_CHECKOUT:
+      return removeItemFromCheckout(state, action);
     case CartActionType.ADD_ITEM_TO_CART:
       return addItemToCart(state, action);
-    case CartActionType.ADD_ITEM_TO_PURCHASING:
-      return addItemToPurchasing(state, action);
+    case CartActionType.REMOVE_ITEM_FROM_CART:
+      return removeItemFromCart(state, action);
+    case CartActionType.ADD_ITEM_TO_CHECKOUT:
+      return addItemToCheckout(state, action);
     default:
       return state;
   }

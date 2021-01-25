@@ -18,3 +18,10 @@ export const Notice = styled.p`
   text-align: center;
   margin-top: 5rem;
 `;
+
+export const Icon = styled.img`
+  width: 1rem;
+  height: 1 rem;
+  margin-left: 1rem;
+  cursor: pointer;
+`;

@@ -43,7 +43,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "src/assets/data/productItems.js", "src/assets/data/coupons.js", "src/contexts/cartContext.js", "src/reducer/actions.js", "src/reducer/context.js"  ],
+, "src/assets/data/productItems.js", "src/assets/data/coupons.js", "src/contexts/cartContext.js", "src/reducer/actions.js", "src/reducer/context.tsx"  ],
   "exclude": [
     "node_modules"
   ]

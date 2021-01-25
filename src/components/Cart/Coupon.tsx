@@ -1,6 +1,7 @@
-import { useContext, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { CouponType } from 'types/types';
+import { Icon } from 'styles/styles';
 
 const CouponWrapper = styled.div`
   font-size: 1rem;
@@ -12,12 +13,6 @@ const CouponWrapper = styled.div`
 const CouponTitle = styled.div`
   display: flex;
   align-items: center;
-
-  img {
-    width: 1rem;
-    height: 1rem;
-    margin-left: 0.5rem;
-  }
 `;
 
 const CouponList = styled.ul`
@@ -33,16 +28,16 @@ interface CouponProps {
   title: string;
   isClicked: boolean;
   coupons: CouponType[];
-  onClick: (e) => void;
   onChange: (coupon: CouponType) => void;
+  onClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
-function Coupon({ onClick, onChange, title, isClicked, coupons }: CouponProps) {
+function Coupon({ title, isClicked, coupons, onChange, onClick }: CouponProps) {
   return (
     <CouponWrapper onClick={onClick}>
       <CouponTitle>
         <p>{title}</p>
-        <img src="assets/icons/bottom.svg" alt={title} />
+        <Icon src="assets/icons/bottom.svg" alt={title} />
       </CouponTitle>
       {isClicked && (
         <CouponList>
@@ -58,4 +53,4 @@ function Coupon({ onClick, onChange, title, isClicked, coupons }: CouponProps) {
   );
 }
 
-export default Coupon;
+export default React.memo(Coupon);

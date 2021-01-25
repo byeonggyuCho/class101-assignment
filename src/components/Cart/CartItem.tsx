@@ -1,8 +1,10 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useContext } from 'react';
 import styled from 'styled-components';
 
-import { ProductItemType } from 'types/types';
-import { Image } from 'styles/styles';
+import { CartActionType } from 'reducer/actions';
+import { CartContext } from 'reducer/context';
+import { ProductType } from 'types/types';
+import { Image, Icon } from 'styles/styles';
 import { formatPrice } from 'utility/utility';
 
 const Wrapper = styled.div`
@@ -15,6 +17,7 @@ const Wrapper = styled.div`
 const ImageWrapper = styled.div`
   width: 15rem;
   height: 10rem;
+  margin-left: 2rem;
 `;
 
 const TextWrapper = styled.div`
@@ -25,11 +28,7 @@ const TextWrapper = styled.div`
   }
 `;
 
-const Checkbox = styled.input`
-  margin-right: 2rem;
-`;
-
-const Description = styled.h2`
+const Title = styled.h2`
   font-weight: 700;
   margin-bottom: 1rem;
 `;
@@ -39,11 +38,8 @@ const CouponTitle = styled.h4`
   color: #ff912a;
 `;
 
-const InputWrapper = styled.div`
-  margin-left: auto;
-`;
-
 const Select = styled.select`
+  margin-left: auto;
   padding: 0.3rem;
 
   &:focus {
@@ -51,19 +47,30 @@ const Select = styled.select`
   }
 `;
 
+const OptionWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+`;
+
 interface CartItemProp {
-  item: ProductItemType;
-  onChange: (e: ChangeEvent<HTMLInputElement>, item: ProductItemType) => void;
+  item: ProductType;
+  onChange: (e: ChangeEvent<HTMLInputElement>, item: ProductType) => void;
   onChangeAmount: (e: ChangeEvent<HTMLSelectElement>, id: string) => void;
 }
 
 function CartItem({ item, onChange, onChangeAmount }: CartItemProp) {
+  const { dispatch } = useContext(CartContext);
   const { coverImage, title, price, availableCoupon, id, isChecked } = item;
-  const options: number[] = [1, 2, 3, 4, 5];
+  const amountOptions: number[] = [1, 2, 3, 4, 5];
+
+  const removeItemFromCart = (id): void => {
+    dispatch({ type: CartActionType.REMOVE_ITEM_FROM_CART, payload: id });
+  };
 
   return (
     <Wrapper>
-      <Checkbox
+      <input
         type="checkbox"
         checked={isChecked}
         onChange={e => onChange(e, item)}
@@ -72,21 +79,27 @@ function CartItem({ item, onChange, onChangeAmount }: CartItemProp) {
         <Image src={coverImage} alt={title} />
       </ImageWrapper>
       <TextWrapper>
-        <Description>{title}</Description>
+        <Title>{title}</Title>
         <h3>{formatPrice(price)}원</h3>
         {availableCoupon === false && (
           <CouponTitle>* 쿠폰 사용 불가능</CouponTitle>
         )}
       </TextWrapper>
-      <InputWrapper>
+
+      <OptionWrapper>
         <Select onChange={e => onChangeAmount(e, id)}>
-          {options.map(option => (
+          {amountOptions.map(option => (
             <option value={option} key={option}>
               {option}
             </option>
           ))}
         </Select>
-      </InputWrapper>
+        <Icon
+          src="/assets/icons/trash-can.svg"
+          alt="상품 삭제하기"
+          onClick={() => removeItemFromCart(id)}
+        />
+      </OptionWrapper>
     </Wrapper>
   );
 }

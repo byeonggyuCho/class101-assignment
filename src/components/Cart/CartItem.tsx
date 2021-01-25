@@ -1,11 +1,11 @@
 import { ChangeEvent, useContext } from 'react';
 import styled from 'styled-components';
 
-import { CartActionType } from 'reducer/actions';
 import { CartContext } from 'reducer/context';
 import { ProductType } from 'types/types';
 import { Image, Icon } from 'styles/styles';
 import { formatPrice } from 'utility/utility';
+import { removeItemFromCart } from 'reducer/actions';
 
 const Wrapper = styled.div`
   display: flex;
@@ -64,8 +64,8 @@ function CartItem({ item, onChange, onChangeAmount }: CartItemProp) {
   const { coverImage, title, price, availableCoupon, id, isChecked } = item;
   const amountOptions: number[] = [1, 2, 3, 4, 5];
 
-  const removeItemFromCart = (id): void => {
-    dispatch({ type: CartActionType.REMOVE_ITEM_FROM_CART, payload: id });
+  const handleClick = (id: string): void => {
+    dispatch(removeItemFromCart(id));
   };
 
   return (
@@ -97,7 +97,7 @@ function CartItem({ item, onChange, onChangeAmount }: CartItemProp) {
         <Icon
           src="/assets/icons/trash-can.svg"
           alt="상품 삭제하기"
-          onClick={() => removeItemFromCart(id)}
+          onClick={() => handleClick(id)}
         />
       </OptionWrapper>
     </Wrapper>

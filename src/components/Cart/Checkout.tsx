@@ -48,9 +48,10 @@ interface DiscountPrice {
 }
 
 // Number Format
-// 중복 쿠폰 사용 불가
 // 체크 헤제시 price를 0으로 설정
 // 쿠폰을 먼저 설정후, 상품 체크시, 쿠폰 적용
+// 체크아웃 리스트에 담긴 아이템을 차트에서 삭제하면, 체크아웃 리스트에서도 삭제
+// 쿠폰은 한가지만 사용가능 합니다
 function Checkout({ coupons }: CheckoutProps) {
   const { state } = useContext(CartContext);
   const { checkout } = state;
@@ -98,7 +99,10 @@ function Checkout({ coupons }: CheckoutProps) {
     let discount: number;
     let discountedPrice: number;
 
-    if (sum <= 0) return 0; // Show flash Message
+    if (sum <= 0) {
+      alert('쿠폰 적용이 불가한 상품입니다.');
+      return 0;
+    }
     if (type === 'rate') {
       discount = sum / discountRate;
       discountedPrice = sum - discount;

@@ -3,12 +3,18 @@ import Layout from 'components/Layout/Layout';
 import styled from 'styled-components';
 
 import { coupons } from 'assets/data/coupons';
-import { CartActionType } from 'reducer/actions';
 import { CartContext } from 'reducer/context';
 import { ProductType } from 'types/types';
 import { Title, Notice } from 'styles/styles';
 import CartItem from 'components/Cart/CartItem';
 import Checkout from 'components/Cart/Checkout';
+
+import {
+  toggleIsChekced,
+  updateAmount,
+  addItemToCheckout,
+  removeItemFromCheckout,
+} from 'reducer/actions';
 
 const Wrapper = styled.div`
   width: 70%;
@@ -27,7 +33,7 @@ function cart() {
   const handleChangeAmount = useCallback(
     (e: ChangeEvent<HTMLSelectElement>, id: string): void => {
       const { value } = e.target;
-      dispatch({ type: CartActionType.UPDATE_AMOUNT, id: id, amount: value });
+      dispatch(updateAmount(id, value));
     },
     []
   );
@@ -35,30 +41,15 @@ function cart() {
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>, item: ProductType): void => {
       if (e.target.checked) {
-        addItemToCheckout(item);
-        toggleIsChekced(item);
+        dispatch(addItemToCheckout(item));
+        dispatch(toggleIsChekced(item));
       } else {
-        removeItemFromCheckout(item.id);
-        toggleIsChekced(item);
+        dispatch(removeItemFromCheckout(item.id));
+        dispatch(toggleIsChekced(item));
       }
     },
     []
   );
-
-  const toggleIsChekced = (item: ProductType): void => {
-    dispatch({ type: CartActionType.TOGGLE_ISCHECKED, payload: item });
-  };
-
-  const removeItemFromCheckout = (id: string): void => {
-    dispatch({
-      type: CartActionType.REMOVE_ITEM_FROM_CHECKOUT,
-      payload: id,
-    });
-  };
-
-  const addItemToCheckout = (item: ProductType): void => {
-    dispatch({ type: CartActionType.ADD_ITEM_TO_CHECKOUT, payload: item });
-  };
 
   return (
     <Layout>

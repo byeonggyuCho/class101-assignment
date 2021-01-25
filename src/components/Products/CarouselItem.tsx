@@ -2,10 +2,10 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 
 import { CartContext } from 'reducer/context';
-import { CartActionType } from 'reducer/actions';
 import { ProductType } from 'types/types';
 import { formatPrice } from 'utility/utility';
 import { Image } from 'styles/styles';
+import { addItemToCart, removeItemFromCart } from 'reducer/actions';
 
 const Wrapper = styled.div`
   position: relative;
@@ -13,6 +13,7 @@ const Wrapper = styled.div`
   flex-shrink: 0;
   padding-right: 1rem;
   box-sizing: border-box;
+  height: 20rem;
 `;
 
 const ImageWrapper = styled.div`
@@ -59,23 +60,31 @@ interface CarouselItemProps {
 }
 
 function CarouselItem({ product }: CarouselItemProps) {
-  const { title, coverImage, price } = product;
+  const { title, coverImage, price, id } = product;
   const { state, dispatch } = useContext(CartContext);
   const { cart } = state;
 
-  const handleAddItemToCart = (item: ProductType): void => {
-    dispatch({ type: CartActionType.ADD_ITEM_TO_CART, payload: item });
-  };
+  const isAleadyExisting: boolean = cart.filter(el => el.id === id).length > 0;
 
   const handleClick = (item: ProductType): void => {
-    if (cart.length >= 3) return;
-    handleAddItemToCart(item);
+    const { id } = item;
+    if (cart.length >= 3) {
+      alert('장바구니에 담을 수 있는 아이템의 최대 개수는 3개 입니다.');
+    } else if (isAleadyExisting) {
+      dispatch(removeItemFromCart(id));
+    } else {
+      dispatch(addItemToCart(item));
+    }
   };
 
   return (
     <Wrapper>
       <Icon
-        src="/assets/icons/cart.svg"
+        src={
+          isAleadyExisting
+            ? '/assets/icons/cart-fill.svg'
+            : '/assets/icons/cart.svg'
+        }
         alt="Shopping Cart"
         onClick={() => handleClick(product)}
       />

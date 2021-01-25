@@ -17,8 +17,6 @@ export interface ProductType {
   amount?: number;
 }
 
-// export type ProductItemsType = ProductItemType[]; // Remove
-
 export interface CouponType {
   type: string;
   title: string;

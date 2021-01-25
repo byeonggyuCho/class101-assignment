@@ -1,5 +1,21 @@
-import { CartActionType, CartStateType, ActionType } from 'reducer/actions';
 import { updateObject } from 'utility/utility';
+import { ProductType } from 'types/types';
+import { ActionType } from 'reducer/actionTypes';
+
+export enum CartActionType {
+  TOGGLE_ISCHECKED = 'TOGGLE_ISCHECKED',
+  INIT_AMOUNT = 'INIT_AMOUNT',
+  UPDATE_AMOUNT = 'UPDATE_AMOUNT',
+  ADD_ITEM_TO_CART = 'ADD_ITEM_TO_CART',
+  REMOVE_ITEM_FROM_CART = 'REMOVE_ITEM_FROM_CART',
+  ADD_ITEM_TO_CHECKOUT = 'ADD_ITEM_TO_CHECKOUT',
+  REMOVE_ITEM_FROM_CHECKOUT = 'REMOVE_ITEM_FROM_CHECKOUT',
+}
+
+interface CartStateType {
+  cart: ProductType[];
+  checkout: ProductType[];
+}
 
 export const INITIAL_STATE: CartStateType = {
   cart: [],
@@ -61,7 +77,7 @@ const removeItemFromCheckout = (state: CartStateType, action: ActionType) => {
   return updateObject(state, updatedState);
 };
 
-const addItemToCart = (state: CartStateType, action: ActionType) => {
+const addItemToCart = (state: CartStateType, action) => {
   const newItem = {
     ...action.payload,
     isChecked: false,
@@ -72,7 +88,6 @@ const addItemToCart = (state: CartStateType, action: ActionType) => {
     ...state,
     cart: [...state.cart, newItem],
   };
-
   return updateObject(state, updatedState);
 };
 

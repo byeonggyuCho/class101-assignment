@@ -68,13 +68,22 @@ function CarouselItem({ product }: CarouselItemProps) {
 
   const handleClick = (item: ProductType): void => {
     const { id } = item;
-    if (cart.length >= 3) {
-      alert('장바구니에 담을 수 있는 아이템의 최대 개수는 3개 입니다.');
-    } else if (isAleadyExisting) {
+    if (cart.length >= 3 && isAleadyExisting) {
+      // 장바구니의 아이템이 3개 존재하고, 선택한 아이템이 장바구니에 이미 존재할 경우
       dispatch(removeItemFromCart(id));
+    } else if (cart.length >= 3 && !isAleadyExisting) {
+      // 장바구니의 아이템이 3개 존재하고, 장바구니에 담기지 않은 아이템을 추가할 경우
+      alert('장바구니에 담을 수 있는 아이템의 최대 개수는 3개 입니다.');
     } else {
-      dispatch(addItemToCart(item));
+      handleToggle(item);
     }
+  };
+
+  const handleToggle = (item: ProductType): void => {
+    const { id } = item;
+    isAleadyExisting
+      ? dispatch(removeItemFromCart(id))
+      : dispatch(addItemToCart(item));
   };
 
   return (

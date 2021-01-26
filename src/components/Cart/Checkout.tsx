@@ -1,8 +1,9 @@
-import React, { useContext, useState, useCallback } from 'react';
+import React, { useContext, useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { ProductType, CouponType } from 'types/types';
 import { CartContext } from 'reducer/context';
+import { formatPrice } from 'utility/utility';
 import Coupon from 'components/Cart/Coupon';
 
 const Wrapper = styled.div`
@@ -47,20 +48,39 @@ interface DiscountPrice {
   discountedPrice: number;
 }
 
-// Number Format
-// 체크 헤제시 price를 0으로 설정
 // 쿠폰을 먼저 설정후, 상품 체크시, 쿠폰 적용
-// 체크아웃 리스트에 담긴 아이템을 차트에서 삭제하면, 체크아웃 리스트에서도 삭제
-// 쿠폰은 한가지만 사용가능 합니다
+// 쿠폰 중복 불가 메세지(쿠폰은 한가지만 사용가능 합니다)
 function Checkout({ coupons }: CheckoutProps) {
   const { state } = useContext(CartContext);
   const { checkout } = state;
   const [isClicked, setIsClicked] = useState(false);
   const [selectedCoupon, setSelectedCoupon] = useState(null);
+  // const [couponType, setCouponType] = useState({
+  //   rate: false,
+  //   amount: false,
+  // });
+
+  // useEffect(() => {
+  //   showAlert();
+  // }, [selectedCoupon]);
+
+  // const showAlert = () => {
+  //   if (couponType.rate === true && couponType.amount === true) {
+  //     alert('쿠폰은 중복 사용이 불가능 합니다.');
+  //     // set checkbox unchecked
+  //     return;
+  //   }
+  // };
 
   const handleChange = useCallback(
-    (coupon: CouponType): void => {
-      selectedCoupon ? setSelectedCoupon(null) : setSelectedCoupon(coupon);
+    (e, coupon: CouponType): void => {
+      const { id, checked } = e.target;
+      if (selectedCoupon) {
+        setSelectedCoupon(null);
+      } else {
+        setSelectedCoupon(coupon);
+      }
+      // setCouponType(prev => ({ ...prev, [id]: checked }));
     },
     [selectedCoupon]
   );
@@ -93,51 +113,45 @@ function Checkout({ coupons }: CheckoutProps) {
 
   const getDiscounts = (
     coupon: CouponType,
-    sum: number
+    sumOfDiscountables: number
   ): number | DiscountPrice => {
     const { type, discountRate, discountAmount } = coupon;
     let discount: number;
     let discountedPrice: number;
 
-    if (sum <= 0) {
-      alert('쿠폰 적용이 불가한 상품입니다.');
+    if (sumOfDiscountables <= 0) {
       return 0;
     }
     if (type === 'rate') {
-      discount = sum / discountRate;
-      discountedPrice = sum - discount;
+      discount = sumOfDiscountables / discountRate;
+      discountedPrice = sumOfDiscountables - discount;
       return { discount, discountedPrice };
     } else if (type === 'amount') {
-      discountedPrice = sum - discountAmount;
+      discountedPrice = sumOfDiscountables - discountAmount;
       return { discount: discountAmount, discountedPrice };
     }
   };
 
-  const getTotalPrice = useCallback(
-    (arr: ProductType[]): number | TotalPrice => {
-      const isCheckoutExisting: boolean = checkout.length > 0;
+  const getTotalPrice = (arr: ProductType[]): number | TotalPrice => {
+    const isCheckoutExisting: boolean = checkout.length > 0;
 
-      if (selectedCoupon && isCheckoutExisting) {
-        const {
-          discountables,
-          nonDiscountables,
-        } = filterProductsByDiscountability(arr);
-        const sumOfDiscountables: number = getOriginalPrice(discountables);
-        const sumOfNonDiscountables: number = getOriginalPrice(
-          nonDiscountables
-        );
-        const { discount, discountedPrice }: any = getDiscounts(
-          selectedCoupon,
-          sumOfDiscountables
-        );
-        const totalSum: number = sumOfNonDiscountables + discountedPrice;
-        return { totalSum, discount };
-      }
+    if (selectedCoupon && isCheckoutExisting) {
+      const {
+        discountables,
+        nonDiscountables,
+      } = filterProductsByDiscountability(arr);
+      const sumOfDiscountables: number = getOriginalPrice(discountables);
+      const sumOfNonDiscountables: number = getOriginalPrice(nonDiscountables);
+      const { discount, discountedPrice }: any = getDiscounts(
+        selectedCoupon,
+        sumOfDiscountables
+      );
+      const totalSum: number = sumOfNonDiscountables + discountedPrice;
+      return { totalSum, discount };
+    }
 
-      return getOriginalPrice(arr);
-    },
-    [selectedCoupon]
-  );
+    return getOriginalPrice(arr);
+  };
 
   const { totalSum, discount }: any = getTotalPrice(checkout);
   enum Price {
@@ -157,13 +171,13 @@ function Checkout({ coupons }: CheckoutProps) {
         onChange={handleChange}
       />
       <SubTitle>
-        총 상품 금액<span>{Price.originalPrice}원</span>
+        총 상품 금액<span>{formatPrice(Price.originalPrice)}원</span>
       </SubTitle>
       <SubTitle>
-        쿠폰할인 금액<span>{Price.dicountPrice}원</span>
+        쿠폰할인 금액<span>{formatPrice(Price.dicountPrice)}원</span>
       </SubTitle>
       <SubTitle>
-        최종 결제 금액<span>{Price.totalPrice}원</span>
+        최종 결제 금액<span>{formatPrice(Price.totalPrice)}원</span>
       </SubTitle>
     </Wrapper>
   );

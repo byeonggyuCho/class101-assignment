@@ -1,11 +1,11 @@
-import { ChangeEvent, useContext } from 'react';
+import React, { ChangeEvent, useContext } from 'react';
 import styled from 'styled-components';
 
 import { CartContext } from 'reducer/context';
 import { ProductType } from 'types/types';
 import { Image, Icon } from 'styles/styles';
 import { formatPrice } from 'utility/utility';
-import { removeItemFromCart } from 'reducer/actions';
+import { removeItemFromCart, removeItemFromCheckout } from 'reducer/actions';
 
 const Wrapper = styled.div`
   display: flex;
@@ -55,17 +55,23 @@ const OptionWrapper = styled.div`
 
 interface CartItemProp {
   item: ProductType;
+  cart: ProductType[];
   onChange: (e: ChangeEvent<HTMLInputElement>, item: ProductType) => void;
   onChangeAmount: (e: ChangeEvent<HTMLSelectElement>, id: string) => void;
 }
 
-function CartItem({ item, onChange, onChangeAmount }: CartItemProp) {
+function CartItem({ item, cart, onChange, onChangeAmount }: CartItemProp) {
   const { dispatch } = useContext(CartContext);
   const { coverImage, title, price, availableCoupon, id, isChecked } = item;
   const amountOptions: number[] = [1, 2, 3, 4, 5];
 
   const handleClick = (id: string): void => {
+    const isExistingInCheckout = cart.filter(item => item.id === id).length > 0;
     dispatch(removeItemFromCart(id));
+
+    if (isExistingInCheckout) {
+      dispatch(removeItemFromCheckout(id));
+    }
   };
 
   return (
@@ -104,4 +110,4 @@ function CartItem({ item, onChange, onChangeAmount }: CartItemProp) {
   );
 }
 
-export default CartItem;
+export default React.memo(CartItem);

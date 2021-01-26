@@ -8,7 +8,6 @@ import { ProductType } from 'types/types';
 import { Title, Notice } from 'styles/styles';
 import CartItem from 'components/Cart/CartItem';
 import Checkout from 'components/Cart/Checkout';
-
 import {
   toggleIsChekced,
   updateAmount,
@@ -60,6 +59,7 @@ function cart() {
             <CartItem
               key={item.id}
               item={item}
+              cart={cart}
               onChange={handleChange}
               onChangeAmount={handleChangeAmount}
             />

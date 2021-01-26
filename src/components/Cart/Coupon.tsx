@@ -28,7 +28,10 @@ interface CouponProps {
   title: string;
   isClicked: boolean;
   coupons: CouponType[];
-  onChange: (coupon: CouponType) => void;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    coupon: CouponType
+  ) => void;
   onClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
@@ -44,7 +47,11 @@ function Coupon({ title, isClicked, coupons, onChange, onClick }: CouponProps) {
           {coupons.map(coupon => (
             <li key={coupon.title}>
               {coupon.title}
-              <input type="checkbox" onChange={() => onChange(coupon)} />
+              <input
+                id={coupon.type}
+                type="checkbox"
+                onChange={e => onChange(e, coupon)}
+              />
             </li>
           ))}
         </CouponList>

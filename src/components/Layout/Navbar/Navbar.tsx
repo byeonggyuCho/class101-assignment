@@ -36,7 +36,7 @@ const Item = styled.li<{ isActive: boolean }>`
   text-decoration: ${({ isActive }) => isActive && 'underline'};
 
   &:not(:last-child) {
-    margin-right: 1rem;
+    margin-right: 3rem;
   }
 `;
 

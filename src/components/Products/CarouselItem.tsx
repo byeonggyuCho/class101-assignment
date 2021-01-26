@@ -7,20 +7,16 @@ import { formatPrice } from 'utility/utility';
 import { Image } from 'styles/styles';
 import { addItemToCart, removeItemFromCart } from 'reducer/actions';
 
-const Wrapper = styled.div<{ width: number }>`
+const Wrapper = styled.div`
   position: relative;
-  width: ${({ width }) => `calc(${width}px / 5)`};
+  width: calc(100% / 5);
+  height: 100%;
   flex-shrink: 0;
-  padding-right: 2rem;
+  padding: 0 1rem;
   box-sizing: border-box;
-  height: 20rem;
-
-  @media (max-width: 1024px) {
-    width: ${({ width }) => `calc(${width}px / 3)`};
-  }
 
   @media (max-width: 568px) {
-    width: ${({ width }) => `calc(${width}px)`};
+    width: calc(100% / 1);
   }
 `;
 
@@ -28,6 +24,10 @@ const ImageWrapper = styled.div`
   width: 100%;
   height: 15rem;
   overflow: hidden;
+
+  @media (max-width: 576px) {
+    height: 20rem;
+  }
 `;
 
 const Img = styled(Image)`
@@ -65,14 +65,12 @@ const Icon = styled.img`
 
 interface CarouselItemProps {
   product: ProductType;
-  width: number;
 }
 
-function CarouselItem({ product, width }: CarouselItemProps) {
+function CarouselItem({ product }: CarouselItemProps) {
   const { title, coverImage, price, id } = product;
   const { state, dispatch } = useContext(CartContext);
   const { cart } = state;
-  console.log(width);
 
   const isAleadyExisting: boolean = cart.filter(el => el.id === id).length > 0;
 
@@ -97,7 +95,7 @@ function CarouselItem({ product, width }: CarouselItemProps) {
   };
 
   return (
-    <Wrapper width={width}>
+    <Wrapper>
       <Icon
         src={
           isAleadyExisting

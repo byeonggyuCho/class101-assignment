@@ -52,32 +52,27 @@ interface DiscountPrice {
   discountedPrice: number;
 }
 
-/* TODO
-  쿠폰을 먼저 설정후, 상품 체크시, 쿠폰 적용
-  쿠폰 중복 불가 메세지(쿠폰은 한가지만 사용가능 합니다)
-*/
-
 function Checkout({ coupons }: CheckoutProps) {
   const { state } = useContext(CartContext);
   const { checkout } = state;
   const [isClicked, setIsClicked] = useState(false);
   const [selectedCoupon, setSelectedCoupon] = useState(null);
-  // const [couponType, setCouponType] = useState({
-  //   rate: false,
-  //   amount: false,
-  // });
+  const [couponType, setCouponType] = useState({
+    rate: false,
+    amount: false,
+  });
 
-  // useEffect(() => {
-  //   showAlert();
-  // }, [selectedCoupon]);
+  useEffect(() => {
+    showAlert();
+  }, [selectedCoupon]);
 
-  // const showAlert = () => {
-  //   if (couponType.rate === true && couponType.amount === true) {
-  //     alert('쿠폰은 중복 사용이 불가능 합니다.');
-  //     // set checkbox unchecked
-  //     return;
-  //   }
-  // };
+  const showAlert = () => {
+    if (couponType.rate === true && couponType.amount === true) {
+      alert('쿠폰은 중복 사용이 불가능 합니다.');
+      // 체크박스 해제
+      return;
+    }
+  };
 
   const handleChange = useCallback(
     (e, coupon: CouponType): void => {
@@ -87,7 +82,7 @@ function Checkout({ coupons }: CheckoutProps) {
       } else {
         setSelectedCoupon(coupon);
       }
-      // setCouponType(prev => ({ ...prev, [id]: checked }));
+      setCouponType(prev => ({ ...prev, [id]: checked }));
     },
     [selectedCoupon]
   );

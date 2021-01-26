@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 85%;
 `;
 
 function Products() {
@@ -27,8 +27,8 @@ function Products() {
 
   return (
     <Layout>
+      <Title>Products</Title>
       <Wrapper>
-        <Title>Products</Title>
         <Carousel products={sortedProducts} />
       </Wrapper>
     </Layout>

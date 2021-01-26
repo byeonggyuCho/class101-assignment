@@ -8,20 +8,28 @@ import CarouselItem from 'components/Products/CarouselItem';
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 35rem;
 `;
 
 const InnerWrapper = styled.div`
   position: relative;
   overflow-x: hidden;
   width: 85%;
+  height: 100%;
+
+  @media (max-width: 576px) {
+    width: 80%;
+  }
 `;
 
 const ItemsWrapper = styled.div<{ xPosition: number }>`
-  height: 400px;
-  display: flex;
+  width: 100%;
+  height: 100%;
+  display: inline-flex;
   align-items: center;
   transition: transform 0.6s ease-in-out;
   transform: ${({ xPosition }) => xPosition && `translateX(${xPosition}px)`};
@@ -57,23 +65,20 @@ function Carousel({ products }: CarouselProps) {
   const [width, setWidth] = useState(0);
   const ref = useRef(null);
 
-  const handleGetWidth = () => {
-    if (ref.current) {
-      const width = ref.current.clientWidth;
-      setWidth(width);
-    }
-  };
-
-  useEffect(() => {
-    handleGetWidth();
-
-    window.addEventListener('resize', handleGetWidth);
-    return () => window.removeEventListener('resize', handleGetWidth);
-  }, []);
-
   const maxPageNumber: number = useMemo(() => Math.ceil(products.length / 5), [
     products,
   ]);
+
+  useEffect(() => {
+    handleGetWidth();
+  }, []);
+
+  const handleGetWidth = (): void => {
+    if (ref.current) {
+      const width: number = ref.current.clientWidth;
+      setWidth(width);
+    }
+  };
 
   const handleClickPrev = (): void => {
     if (count === 1) return;
@@ -96,7 +101,7 @@ function Carousel({ products }: CarouselProps) {
       <InnerWrapper ref={ref}>
         <ItemsWrapper xPosition={xPosition}>
           {products.map((product: ProductType) => (
-            <CarouselItem key={product.id} product={product} width={width} />
+            <CarouselItem key={product.id} product={product} />
           ))}
         </ItemsWrapper>
       </InnerWrapper>

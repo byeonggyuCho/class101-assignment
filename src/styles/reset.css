@@ -122,3 +122,11 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+
+html,
+body,
+body > div:first-child,
+div#__next,
+div#__next > div {
+  height: 100%;
+}

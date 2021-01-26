@@ -7,18 +7,26 @@ import { formatPrice } from 'utility/utility';
 import { Image } from 'styles/styles';
 import { addItemToCart, removeItemFromCart } from 'reducer/actions';
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ width: number }>`
   position: relative;
-  width: calc(1280px / 5);
+  width: ${({ width }) => `calc(${width}px / 5)`};
   flex-shrink: 0;
-  padding-right: 1rem;
+  padding-right: 2rem;
   box-sizing: border-box;
   height: 20rem;
+
+  @media (max-width: 1024px) {
+    width: ${({ width }) => `calc(${width}px / 3)`};
+  }
+
+  @media (max-width: 568px) {
+    width: ${({ width }) => `calc(${width}px)`};
+  }
 `;
 
 const ImageWrapper = styled.div`
   width: 100%;
-  height: 10rem;
+  height: 15rem;
   overflow: hidden;
 `;
 
@@ -35,13 +43,13 @@ const Content = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 1rem;
+  font-size: 1.6rem;
   text-align: center;
   line-height: 1.3;
 `;
 
 const Price = styled.h3`
-  font-size: 1rem;
+  font-size: 1.4rem;
   text-align: center;
   font-weight: 700;
   margin-top: 3rem;
@@ -49,20 +57,22 @@ const Price = styled.h3`
 
 const Icon = styled.img`
   position: absolute;
-  top: 0.5rem;
-  right: 1.4rem;
+  top: 1rem;
+  right: 3rem;
   z-index: 10;
   cursor: pointer;
 `;
 
 interface CarouselItemProps {
   product: ProductType;
+  width: number;
 }
 
-function CarouselItem({ product }: CarouselItemProps) {
+function CarouselItem({ product, width }: CarouselItemProps) {
   const { title, coverImage, price, id } = product;
   const { state, dispatch } = useContext(CartContext);
   const { cart } = state;
+  console.log(width);
 
   const isAleadyExisting: boolean = cart.filter(el => el.id === id).length > 0;
 
@@ -87,7 +97,7 @@ function CarouselItem({ product }: CarouselItemProps) {
   };
 
   return (
-    <Wrapper>
+    <Wrapper width={width}>
       <Icon
         src={
           isAleadyExisting

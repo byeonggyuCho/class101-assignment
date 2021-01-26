@@ -10,12 +10,17 @@ type NavbarType = {
 };
 
 const Wrapper = styled.nav`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 7rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 1.1rem;
-  height: 4rem;
+  font-size: 2rem;
   padding: 0 3rem;
+  background-color: white;
   box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
 `;
 
@@ -25,8 +30,6 @@ const Logo = styled.div`
 
 const List = styled.ul`
   display: flex;
-  margin: 0;
-  padding: 0;
 `;
 
 const Item = styled.li<{ isActive: boolean }>`

@@ -9,15 +9,19 @@ import Coupon from 'components/Cart/Coupon';
 const Wrapper = styled.div`
   width: 70%;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 3rem;
   box-sizing: border-box;
   background-color: #f2f2f2;
+
+  @media (max-width: 768px) {
+    width: 90%;
+  }
 `;
 
 const TotalSum = styled.h2`
-  font-size: 1.3rem;
+  font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 `;
 
 const SubTitle = styled.p`
@@ -25,7 +29,7 @@ const SubTitle = styled.p`
   justify-content: space-between;
 
   &:not(:last-child) {
-    margin-bottom: 0.7rem;
+    margin-bottom: 1.5rem;
   }
 `;
 
@@ -48,8 +52,11 @@ interface DiscountPrice {
   discountedPrice: number;
 }
 
-// 쿠폰을 먼저 설정후, 상품 체크시, 쿠폰 적용
-// 쿠폰 중복 불가 메세지(쿠폰은 한가지만 사용가능 합니다)
+/* TODO
+  쿠폰을 먼저 설정후, 상품 체크시, 쿠폰 적용
+  쿠폰 중복 불가 메세지(쿠폰은 한가지만 사용가능 합니다)
+*/
+
 function Checkout({ coupons }: CheckoutProps) {
   const { state } = useContext(CartContext);
   const { checkout } = state;

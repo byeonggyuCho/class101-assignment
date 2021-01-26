@@ -4,15 +4,16 @@ import Layout from 'components/Layout/Layout';
 import { Title } from 'styles/styles';
 
 const Wrapper = styled.div`
-  height: calc(100vh - 4rem);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  height: 100%;
 `;
 
 const SubTitle = styled.h2`
-  font-size: 1.5rem;
+  font-size: 2.5rem;
+  margin-top: 3rem;
 `;
 
 function Home() {

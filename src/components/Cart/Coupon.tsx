@@ -4,10 +4,9 @@ import { CouponType } from 'types/types';
 import { Icon } from 'styles/styles';
 
 const CouponWrapper = styled.div`
-  font-size: 1rem;
   cursor: pointer;
   color: #ff912a;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 `;
 
 const CouponTitle = styled.div`
@@ -17,11 +16,12 @@ const CouponTitle = styled.div`
 
 const CouponList = styled.ul`
   color: black;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
+  line-height: 1.5;
+`;
 
-  li {
-    line-height: 1.5;
-  }
+const Input = styled.input`
+  margin-left: 1rem;
 `;
 
 interface CouponProps {
@@ -47,7 +47,7 @@ function Coupon({ title, isClicked, coupons, onChange, onClick }: CouponProps) {
           {coupons.map(coupon => (
             <li key={coupon.title}>
               {coupon.title}
-              <input
+              <Input
                 id={coupon.type}
                 type="checkbox"
                 onChange={e => onChange(e, coupon)}

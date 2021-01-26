@@ -15,13 +15,22 @@ import {
   removeItemFromCheckout,
 } from 'reducer/actions';
 
-const Wrapper = styled.div`
+const CartWrapper = styled.div`
   width: 70%;
   margin: 0 auto;
   padding: 2rem 6rem 2rem 2rem;
   margin-top: 3rem;
   box-sizing: border-box;
   background-color: #f8f8f9;
+
+  @media (max-width: 768px) {
+    width: 90%;
+  }
+
+  @media (max-width: 576px) {
+    width: 100%;
+    padding: 0;
+  }
 `;
 
 function cart() {
@@ -54,7 +63,7 @@ function cart() {
     <Layout>
       <Title>Shopping Cart</Title>
       {isCartExisting && (
-        <Wrapper>
+        <CartWrapper>
           {cart.map((item: ProductType) => (
             <CartItem
               key={item.id}
@@ -64,7 +73,7 @@ function cart() {
               onChangeAmount={handleChangeAmount}
             />
           ))}
-        </Wrapper>
+        </CartWrapper>
       )}
       {isCartExisting ? (
         <Checkout coupons={coupons} />

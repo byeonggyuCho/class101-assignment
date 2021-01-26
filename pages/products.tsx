@@ -1,18 +1,18 @@
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
+import { productItems } from 'assets/data/productItems';
 import { ProductType } from 'types/types';
 import { Title } from 'styles/styles';
-import { productItems } from 'assets/data/productItems';
 import Layout from 'components/Layout/Layout';
 import Carousel from 'components/Products/Carousel';
 
 const Wrapper = styled.div`
-  height: calc(100vh - 4rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100%;
 `;
 
 function Products() {

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 
 import { ProductType, CouponType } from 'types/types';
@@ -42,9 +42,9 @@ interface FilteredProducts {
   nonDiscountables: ProductType[];
 }
 
-interface TotalPrice {
-  totalSum: number;
-  discount: number;
+interface SelectedCoupon {
+  rate: boolean;
+  amount: boolean;
 }
 
 interface DiscountPrice {
@@ -52,54 +52,33 @@ interface DiscountPrice {
   discountedPrice: number;
 }
 
+interface TotalPrice {
+  discount: number;
+  totalPrice: number;
+}
+
 function Checkout({ coupons }: CheckoutProps) {
   const { state } = useContext(CartContext);
   const { checkout } = state;
-  const [isClicked, setIsClicked] = useState(false);
-  const [selectedCoupon, setSelectedCoupon] = useState(null);
-  const [couponType, setCouponType] = useState({
+  const [selectedCoupon, setSelectedCoupon] = useState<SelectedCoupon>({
     rate: false,
     amount: false,
   });
 
-  useEffect(() => {
-    showAlert();
-  }, [selectedCoupon]);
-
-  const showAlert = () => {
-    if (couponType.rate === true && couponType.amount === true) {
-      alert('쿠폰은 중복 사용이 불가능 합니다.');
-      // 체크박스 해제
-      return;
-    }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    // 쿠폰의 종류 확인
+    const { id, checked } = e.target;
+    setSelectedCoupon({ ...selectedCoupon, [id]: checked });
   };
 
-  const handleChange = useCallback(
-    (e, coupon: CouponType): void => {
-      const { id, checked } = e.target;
-      if (selectedCoupon) {
-        setSelectedCoupon(null);
-      } else {
-        setSelectedCoupon(coupon);
-      }
-      setCouponType(prev => ({ ...prev, [id]: checked }));
-    },
-    [selectedCoupon]
-  );
-
-  const handleClick = useCallback(
-    (e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
-      const { nodeName } = e.target as HTMLInputElement;
-      if (nodeName !== 'INPUT') {
-        setIsClicked(prev => !prev);
-      }
-    },
-    []
-  );
+  const getOriginalPrice = (arr: ProductType[]): number => {
+    return arr.reduce((acc, cur) => (acc += cur.price * cur.amount), 0);
+  };
 
   const filterProductsByDiscountability = (
     arr: ProductType[]
   ): FilteredProducts => {
+    // 쿠폰 사용 가능 여부에 따라서 배열 분리 (할인가능, 불가능)
     const discountables: ProductType[] = arr.filter(
       item => !item.hasOwnProperty('availableCoupon')
     );
@@ -109,77 +88,67 @@ function Checkout({ coupons }: CheckoutProps) {
     return { discountables, nonDiscountables };
   };
 
-  const getOriginalPrice = (arr: ProductType[]): number => {
-    return arr.reduce((acc, cur) => (acc += cur.price * cur.amount), 0);
-  };
-
-  const getDiscounts = (
-    coupon: CouponType,
-    sumOfDiscountables: number
-  ): number | DiscountPrice => {
-    const { type, discountRate, discountAmount } = coupon;
-    let discount: number;
+  const handleDiscount = (
+    coupon: SelectedCoupon,
+    sum: number
+  ): DiscountPrice => {
+    const isDiscountable: boolean = sum > 0;
     let discountedPrice: number;
+    let discount: number;
 
-    if (sumOfDiscountables <= 0) {
-      return 0;
+    if (coupon.rate && coupon.amount && isDiscountable) {
+      discount = sum / 10 + 10000;
+      discountedPrice = sum - discount;
+    } else if (coupon.rate && isDiscountable) {
+      discount = sum / 10;
+      discountedPrice = sum - discount;
+    } else if (coupon.amount && isDiscountable) {
+      discount = 10000;
+      discountedPrice = sum - discount;
     }
-    if (type === 'rate') {
-      discount = sumOfDiscountables / discountRate;
-      discountedPrice = sumOfDiscountables - discount;
-      return { discount, discountedPrice };
-    } else if (type === 'amount') {
-      discountedPrice = sumOfDiscountables - discountAmount;
-      return { discount: discountAmount, discountedPrice };
-    }
+    return { discountedPrice, discount };
   };
 
-  const getTotalPrice = (arr: ProductType[]): number | TotalPrice => {
-    const isCheckoutExisting: boolean = checkout.length > 0;
+  const calcPrice = (): TotalPrice => {
+    // 할인가능 상품 합계, 할인 불가능상품 합계
+    const { discountables, nonDiscountables } = filterProductsByDiscountability(
+      checkout
+    );
+    const sumOfDiscountable: number = getOriginalPrice(discountables);
+    const sumOfNonDiscountables: number = getOriginalPrice(nonDiscountables);
 
-    if (selectedCoupon && isCheckoutExisting) {
-      const {
-        discountables,
-        nonDiscountables,
-      } = filterProductsByDiscountability(arr);
-      const sumOfDiscountables: number = getOriginalPrice(discountables);
-      const sumOfNonDiscountables: number = getOriginalPrice(nonDiscountables);
-      const { discount, discountedPrice }: any = getDiscounts(
-        selectedCoupon,
-        sumOfDiscountables
-      );
-      const totalSum: number = sumOfNonDiscountables + discountedPrice;
-      return { totalSum, discount };
-    }
+    // 할인된 금액 =  (할인가능 상품 - 할인)
+    const { discount, discountedPrice } = handleDiscount(
+      selectedCoupon,
+      sumOfDiscountable
+    );
 
-    return getOriginalPrice(arr);
+    //  할인된 함계 금액 = 총금액 - (할인된 금액) + 할인 불가능 상품
+    const totalPrice: number = discountedPrice + sumOfNonDiscountables;
+    return { discount, totalPrice };
   };
 
-  const { totalSum, discount }: any = getTotalPrice(checkout);
-  enum Price {
-    originalPrice = getOriginalPrice(checkout),
-    dicountPrice = discount ? -discount : 0,
-    totalPrice = discount ? totalSum : Price.originalPrice,
-  }
+  const originalPrice: number = getOriginalPrice(checkout); // 총금액 = 할인가능 상품 + 할인불가능 상품
+  const { discount, totalPrice }: TotalPrice = calcPrice(); // 할인 금액, 할인된 합계 금액
 
   return (
     <Wrapper>
       <TotalSum>결제 금액</TotalSum>
       <Coupon
-        title="사용가능한 쿠폰 보기"
+        title="사용가능한 쿠폰"
         coupons={coupons}
-        isClicked={isClicked}
-        onClick={handleClick}
         onChange={handleChange}
       />
       <SubTitle>
-        총 상품 금액<span>{formatPrice(Price.originalPrice)}원</span>
+        총 상품 금액<span>{formatPrice(originalPrice)}원</span>
       </SubTitle>
       <SubTitle>
-        쿠폰할인 금액<span>{formatPrice(Price.dicountPrice)}원</span>
+        쿠폰할인 금액
+        <span>{discount ? `-${formatPrice(discount)}` : 0}원</span>
       </SubTitle>
       <SubTitle>
-        최종 결제 금액<span>{formatPrice(Price.totalPrice)}원</span>
+        최종 결제 금액
+        <span>{totalPrice ? formatPrice(totalPrice) : 0}원</span>
       </SubTitle>
     </Wrapper>
   );

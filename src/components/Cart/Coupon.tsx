@@ -26,36 +26,32 @@ const Input = styled.input`
 
 interface CouponProps {
   title: string;
-  isClicked: boolean;
   coupons: CouponType[];
   onChange: (
     e: React.ChangeEvent<HTMLInputElement>,
     coupon: CouponType
   ) => void;
-  onClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
-function Coupon({ title, isClicked, coupons, onChange, onClick }: CouponProps) {
+function Coupon({ title, coupons, onChange }: CouponProps) {
   return (
-    <CouponWrapper onClick={onClick}>
+    <CouponWrapper>
       <CouponTitle>
         <p>{title}</p>
         <Icon src="assets/icons/bottom.svg" alt={title} />
       </CouponTitle>
-      {isClicked && (
-        <CouponList>
-          {coupons.map(coupon => (
-            <li key={coupon.title}>
-              {coupon.title}
-              <Input
-                id={coupon.type}
-                type="checkbox"
-                onChange={e => onChange(e, coupon)}
-              />
-            </li>
-          ))}
-        </CouponList>
-      )}
+      <CouponList>
+        {coupons.map(coupon => (
+          <li key={coupon.title}>
+            {coupon.title}
+            <Input
+              id={coupon.type}
+              type="checkbox"
+              onChange={e => onChange(e, coupon)}
+            />
+          </li>
+        ))}
+      </CouponList>
     </CouponWrapper>
   );
 }
